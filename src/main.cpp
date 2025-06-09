@@ -1,3 +1,4 @@
+#include <Arduino.h>
 #include <AccelStepper.h>
 #include <ESP32Servo.h>
 #include <Bounce2.h>
@@ -16,25 +17,25 @@ bool handleDropoff();
 bool handleReturnHome();
 void handleSerial();
 
-// ========================================
-// HARDWARE OBJECTS
-// ========================================
-AccelStepper xStepper(AccelStepper::DRIVER, X_STEP_PIN, X_DIR_PIN);
-AccelStepper zStepper(AccelStepper::DRIVER, Z_STEP_PIN, Z_DIR_PIN);
+//* ************************************************************************
+//* ************************ HARDWARE OBJECTS *****************************
+//* ************************************************************************
+AccelStepper xStepper(AccelStepper::DRIVER, (int)X_STEP_PIN, (int)X_DIR_PIN);
+AccelStepper zStepper(AccelStepper::DRIVER, (int)Z_STEP_PIN, (int)Z_DIR_PIN);
 Servo gripperServo;
 
-// ========================================
-// BOUNCE2 OBJECTS
-// ========================================
+//* ************************************************************************
+//* ************************ BOUNCE2 OBJECTS *******************************
+//* ************************************************************************
 Bounce xHomeSwitch = Bounce();
 Bounce zHomeSwitch = Bounce();
 Bounce startButton = Bounce();
 Bounce stage1Signal = Bounce();
 Bounce stopSignalStage2 = Bounce();
 
-// ========================================
-// STATE VARIABLES
-// ========================================
+//* ************************************************************************
+//* ************************ STATE VARIABLES *******************************
+//* ************************************************************************
 SystemState systemState = STATE_HOMING;
 PickupState pickupState = PICKUP_MOVE_X;
 TransportState transportState = TRANSPORT_ROTATE_SERVO;
@@ -44,9 +45,9 @@ DropoffState dropoffState = DROPOFF_LOWER_Z;
 unsigned long stateTimer = 0;
 bool vacuumActive = false;
 
-// ========================================
-// SETUP FUNCTION
-// ========================================
+//* ************************************************************************
+//* ************************ SETUP FUNCTION ********************************
+//* ************************************************************************
 void setup() {
   Serial.begin(115200);
   Serial.println("Transfer Arm Starting...");
@@ -67,9 +68,9 @@ void setup() {
   systemState = STATE_HOMING;
 }
 
-// ========================================
-// MAIN LOOP - STATE MACHINE
-// ========================================
+//* ************************************************************************
+//* ************************ MAIN LOOP - STATE MACHINE ********************
+//* ************************************************************************
 void loop() {
   // Update all debouncers first
   xHomeSwitch.update();

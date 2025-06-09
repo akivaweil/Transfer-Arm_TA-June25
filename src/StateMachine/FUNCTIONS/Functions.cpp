@@ -10,26 +10,26 @@ extern Servo gripperServo;
 extern unsigned long stateTimer;
 extern bool vacuumActive;
 
-// ========================================
-// HARDWARE SETUP FUNCTIONS
-// ========================================
+//* ************************************************************************
+//* ************************ HARDWARE SETUP FUNCTIONS *********************
+//* ************************************************************************
 void setupPins() {
   // Input pins
-  pinMode(START_BUTTON_PIN, INPUT_PULLDOWN);
-  pinMode(STAGE1_SIGNAL_PIN, INPUT_PULLDOWN);
-  pinMode(X_HOME_SWITCH_PIN, INPUT_PULLDOWN);
-  pinMode(Z_HOME_SWITCH_PIN, INPUT_PULLDOWN);
-  pinMode(STOP_SIGNAL_STAGE_2, INPUT_PULLDOWN);
+  pinMode((int)START_BUTTON_PIN, INPUT_PULLDOWN);
+  pinMode((int)STAGE1_SIGNAL_PIN, INPUT_PULLDOWN);
+  pinMode((int)X_HOME_SWITCH_PIN, INPUT_PULLDOWN);
+  pinMode((int)Z_HOME_SWITCH_PIN, INPUT_PULLDOWN);
+  pinMode((int)STOP_SIGNAL_STAGE_2, INPUT_PULLDOWN);
   
   // Output pins
-  pinMode(X_ENABLE_PIN, OUTPUT);
-  pinMode(SOLENOID_RELAY_PIN, OUTPUT);
-  pinMode(STAGE2_SIGNAL_PIN, OUTPUT);
+  pinMode((int)X_ENABLE_PIN, OUTPUT);
+  pinMode((int)SOLENOID_RELAY_PIN, OUTPUT);
+  pinMode((int)STAGE2_SIGNAL_PIN, OUTPUT);
   
   // Initial states
-  digitalWrite(X_ENABLE_PIN, HIGH);  // Disable X motor initially
-  digitalWrite(SOLENOID_RELAY_PIN, LOW);  // Vacuum off
-  digitalWrite(STAGE2_SIGNAL_PIN, LOW);   // Stage 2 signal off
+  digitalWrite((int)X_ENABLE_PIN, HIGH);  // Disable X motor initially
+  digitalWrite((int)SOLENOID_RELAY_PIN, LOW);  // Vacuum off
+  digitalWrite((int)STAGE2_SIGNAL_PIN, LOW);   // Stage 2 signal off
 }
 
 void setupSteppers() {
@@ -40,8 +40,8 @@ void setupSteppers() {
 }
 
 void setupServo() {
-  gripperServo.attach(SERVO_PIN);
-  gripperServo.write(SERVO_HOME_POS);
+  gripperServo.attach((int)SERVO_PIN);
+  gripperServo.write((int)SERVO_HOME_POS);
   delay(500);  // Let servo reach position
 }
 
@@ -49,28 +49,28 @@ void setupDebouncers() {
   Serial.println("Configuring debouncers...");
   
   // Configure limit switches with 2ms debounce (same as Transfer-Arm_TA-June25)
-  xHomeSwitch.attach(X_HOME_SWITCH_PIN);
+  xHomeSwitch.attach((int)X_HOME_SWITCH_PIN);
   xHomeSwitch.interval(2);  // 2ms debounce
   
-  zHomeSwitch.attach(Z_HOME_SWITCH_PIN);
+  zHomeSwitch.attach((int)Z_HOME_SWITCH_PIN);
   zHomeSwitch.interval(2);  // 2ms debounce
   
   // Configure input signals with 10ms debounce
-  startButton.attach(START_BUTTON_PIN);
+  startButton.attach((int)START_BUTTON_PIN);
   startButton.interval(10);  // 10ms debounce
   
-  stage1Signal.attach(STAGE1_SIGNAL_PIN);
+  stage1Signal.attach((int)STAGE1_SIGNAL_PIN);
   stage1Signal.interval(10);  // 10ms debounce
   
-  stopSignalStage2.attach(STOP_SIGNAL_STAGE_2);
+  stopSignalStage2.attach((int)STOP_SIGNAL_STAGE_2);
   stopSignalStage2.interval(10);  // 10ms debounce
   
   Serial.println("Debouncers configured successfully");
 }
 
-// ========================================
-// UTILITY FUNCTIONS
-// ========================================
+//* ************************************************************************
+//* ************************ UTILITY FUNCTIONS ****************************
+//* ************************************************************************
 bool isMotorAtTarget(AccelStepper& motor) {
   return motor.distanceToGo() == 0;
 }
@@ -90,28 +90,28 @@ bool waitForTime(unsigned long duration) {
 }
 
 void activateVacuum() {
-  digitalWrite(SOLENOID_RELAY_PIN, HIGH);
+  digitalWrite((int)SOLENOID_RELAY_PIN, HIGH);
   vacuumActive = true;
   Serial.println("Vacuum ON");
 }
 
 void deactivateVacuum() {
-  digitalWrite(SOLENOID_RELAY_PIN, LOW);
+  digitalWrite((int)SOLENOID_RELAY_PIN, LOW);
   vacuumActive = false;
   Serial.println("Vacuum OFF");
 }
 
 void enableXMotor() {
-  digitalWrite(X_ENABLE_PIN, LOW);  // Active low
+  digitalWrite((int)X_ENABLE_PIN, LOW);  // Active low
 }
 
 void disableXMotor() {
-  digitalWrite(X_ENABLE_PIN, HIGH);  // Active low
+  digitalWrite((int)X_ENABLE_PIN, HIGH);  // Active low
 }
 
-// ========================================
-// HOMING FUNCTIONS
-// ========================================
+//* ************************************************************************
+//* ************************ HOMING FUNCTIONS ******************************
+//* ************************************************************************
 bool handleHoming() {
   static int homingStep = 0;
   
@@ -126,9 +126,9 @@ bool handleHoming() {
     case 1:  // Wait for Z home switch
       if (zHomeSwitch.read() == HIGH) {
         zStepper.stop();
-        zStepper.setCurrentPosition(Z_HOME_POS);
+        zStepper.setCurrentPosition((int)Z_HOME_POS);
         zStepper.setMaxSpeed(Z_MAX_SPEED);
-        zStepper.moveTo(Z_UP_POS);  // Move up 5 inches
+        zStepper.moveTo((int)Z_UP_POS);  // Move up 5 inches
         Serial.println("Z-axis homed. Moving up...");
         homingStep = 2;
       }
@@ -147,9 +147,9 @@ bool handleHoming() {
     case 3:  // Wait for X home switch
       if (xHomeSwitch.read() == HIGH) {
         xStepper.stop();
-        xStepper.setCurrentPosition(X_HOME_POS);
+        xStepper.setCurrentPosition((int)X_HOME_POS);
         xStepper.setMaxSpeed(X_MAX_SPEED);
-        xStepper.moveTo(X_PICKUP_POS);  // Move to pickup
+        xStepper.moveTo((int)X_PICKUP_POS);  // Move to pickup
         Serial.println("X-axis homed. Moving to pickup...");
         homingStep = 4;
       }
@@ -167,9 +167,9 @@ bool handleHoming() {
   return false;  // Homing not complete
 }
 
-// ========================================
-// IDLE FUNCTIONS  
-// ========================================
+//* ************************************************************************
+//* ************************ IDLE FUNCTIONS ********************************
+//* ************************************************************************
 bool handleIdle() {
   // Check for trigger signals using debounced inputs
   if (startButton.read() == HIGH || 
@@ -182,24 +182,24 @@ bool handleIdle() {
   return false;  // Stay in idle
 }
 
-// ========================================
-// PICKUP FUNCTIONS
-// ========================================
+//* ************************************************************************
+//* ************************ PICKUP FUNCTIONS ******************************
+//* ************************************************************************
 bool handlePickup() {
   switch(pickupState) {
     case PICKUP_MOVE_X:
-      xStepper.moveTo(X_PICKUP_POS);
+      xStepper.moveTo((int)X_PICKUP_POS);
       if (isMotorAtTarget(xStepper)) {
         Serial.println("At pickup position. Setting servo...");
-        gripperServo.write(SERVO_PICKUP_POS);
+        gripperServo.write((int)SERVO_PICKUP_POS);
         pickupState = PICKUP_LOWER_Z;
       }
       break;
       
     case PICKUP_LOWER_Z:
-      zStepper.moveTo(Z_PICKUP_POS);
+      zStepper.moveTo((int)Z_PICKUP_POS);
       // Activate vacuum when halfway down
-      if (zStepper.currentPosition() <= Z_SUCTION_START_POS && !vacuumActive) {
+      if (zStepper.currentPosition() <= (int)Z_SUCTION_START_POS && !vacuumActive) {
         activateVacuum();
       }
       if (isMotorAtTarget(zStepper)) {
@@ -209,9 +209,9 @@ bool handlePickup() {
       break;
       
     case PICKUP_WAIT:
-      if (waitForTime(PICKUP_HOLD_TIME)) {
+      if (waitForTime((unsigned long)PICKUP_HOLD_TIME)) {
         Serial.println("Pickup wait complete. Raising Z...");
-        zStepper.moveTo(Z_UP_POS);
+        zStepper.moveTo((int)Z_UP_POS);
         pickupState = PICKUP_RAISE_Z;
       }
       break;
@@ -231,30 +231,30 @@ bool handlePickup() {
   return false;  // Pickup not complete
 }
 
-// ========================================
-// TRANSPORT FUNCTIONS
-// ========================================
+//* ************************************************************************
+//* ************************ TRANSPORT FUNCTIONS ***************************
+//* ************************************************************************
 bool handleTransport() {
   switch(transportState) {
     case TRANSPORT_ROTATE_SERVO:
-      gripperServo.write(SERVO_TRAVEL_POS);
+      gripperServo.write((int)SERVO_TRAVEL_POS);
       Serial.println("Servo rotated for transport. Moving to overshoot...");
-      xStepper.moveTo(X_OVERSHOOT_POS);
+      xStepper.moveTo((int)X_OVERSHOOT_POS);
       transportState = TRANSPORT_MOVE_TO_OVERSHOOT;
       break;
       
     case TRANSPORT_MOVE_TO_OVERSHOOT:
       if (isMotorAtTarget(xStepper)) {
         Serial.println("At overshoot. Rotating servo for dropoff...");
-        gripperServo.write(SERVO_DROPOFF_POS);
+        gripperServo.write((int)SERVO_DROPOFF_POS);
         transportState = TRANSPORT_WAIT_SERVO;
       }
       break;
       
     case TRANSPORT_WAIT_SERVO:
-      if (waitForTime(SERVO_ROTATION_TIME)) {
+      if (waitForTime((unsigned long)SERVO_ROTATION_TIME)) {
         Serial.println("Servo rotation complete. Moving to dropoff...");
-        xStepper.moveTo(X_DROPOFF_POS);
+        xStepper.moveTo((int)X_DROPOFF_POS);
         transportState = TRANSPORT_MOVE_TO_DROPOFF;
       }
       break;
@@ -274,9 +274,9 @@ bool handleTransport() {
   return false;  // Transport not complete
 }
 
-// ========================================
-// DROPOFF FUNCTIONS
-// ========================================
+//* ************************************************************************
+//* ************************ DROPOFF FUNCTIONS *****************************
+//* ************************************************************************
 bool handleDropoff() {
   switch(dropoffState) {
     case DROPOFF_LOWER_Z:
@@ -286,7 +286,7 @@ bool handleDropoff() {
       }
       
       zStepper.setMaxSpeed(Z_DROPOFF_SPEED);  // Slower for dropoff
-      zStepper.moveTo(Z_DROPOFF_POS);
+      zStepper.moveTo((int)Z_DROPOFF_POS);
       if (isMotorAtTarget(zStepper)) {
         Serial.println("Z lowered for dropoff. Releasing object...");
         deactivateVacuum();
@@ -299,10 +299,10 @@ bool handleDropoff() {
       break;
       
     case DROPOFF_WAIT:
-      if (waitForTime(DROPOFF_HOLD_TIME)) {
+      if (waitForTime((unsigned long)DROPOFF_HOLD_TIME)) {
         Serial.println("Dropoff wait complete. Raising Z...");
         zStepper.setMaxSpeed(Z_MAX_SPEED);  // Back to normal speed
-        zStepper.moveTo(Z_UP_POS);
+        zStepper.moveTo((int)Z_UP_POS);
         dropoffState = DROPOFF_RAISE_Z;
       }
       break;
@@ -310,7 +310,7 @@ bool handleDropoff() {
     case DROPOFF_RAISE_Z:
       if (isMotorAtTarget(zStepper)) {
         Serial.println("Object dropped off!");
-        digitalWrite(STAGE2_SIGNAL_PIN, HIGH);  // Signal Stage 2
+        digitalWrite((int)STAGE2_SIGNAL_PIN, HIGH);  // Signal Stage 2
         dropoffState = DROPOFF_DONE;
       }
       break;
@@ -323,17 +323,17 @@ bool handleDropoff() {
   return false;  // Dropoff not complete
 }
 
-// ========================================
-// RETURN HOME FUNCTIONS
-// ========================================
+//* ************************************************************************
+//* ************************ RETURN HOME FUNCTIONS *************************
+//* ************************************************************************
 bool handleReturnHome() {
   static int returnStep = 0;
   
   switch(returnStep) {
     case 0:  // Signal Stage 2 and move X home
-      digitalWrite(STAGE2_SIGNAL_PIN, LOW);  // Turn off Stage 2 signal
-      gripperServo.write(SERVO_HOME_POS);    // Reset servo
-      xStepper.moveTo(X_HOME_POS);           // Move X home
+      digitalWrite((int)STAGE2_SIGNAL_PIN, LOW);  // Turn off Stage 2 signal
+      gripperServo.write((int)SERVO_HOME_POS);    // Reset servo
+      xStepper.moveTo((int)X_HOME_POS);           // Move X home
       Serial.println("Returning X to home...");
       returnStep = 1;
       break;
@@ -341,7 +341,7 @@ bool handleReturnHome() {
     case 1:  // Wait for X to reach home
       if (isMotorAtTarget(xStepper)) {
         Serial.println("Moving X back to pickup position...");
-        xStepper.moveTo(X_PICKUP_POS);
+        xStepper.moveTo((int)X_PICKUP_POS);
         returnStep = 2;
       }
       break;
@@ -358,9 +358,9 @@ bool handleReturnHome() {
   return false;  // Return not complete
 }
 
-// ========================================
-// SERIAL COMMUNICATION
-// ========================================
+//* ************************************************************************
+//* ************************ SERIAL COMMUNICATION **************************
+//* ************************************************************************
 void handleSerial() {
   if (Serial.available()) {
     String command = Serial.readStringUntil('\n');
