@@ -2,6 +2,7 @@
 #define GLOBALS_H
 
 #include <Bounce2.h>
+#include <FastAccelStepper.h>
 #include "config/Config.h"
 #include "config/Pins_Definitions.h"
 
@@ -78,7 +79,7 @@ bool handleReturnHome();
 void handleSerial();
 
 // Utility functions
-bool isMotorAtTarget(class AccelStepper& motor);
+bool isMotorAtTarget(FastAccelStepper* motor);
 bool waitForTime(unsigned long duration);
 void activateVacuum();
 void deactivateVacuum();
