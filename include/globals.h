@@ -4,6 +4,7 @@
 #include <Bounce2.h>
 #include "config/Config.h"
 #include "config/Pins_Definitions.h"
+#include "config/OTA_Config.h"
 
 //* ************************************************************************
 //* ************************ BOUNCE2 OBJECTS ******************************
@@ -84,5 +85,11 @@ void activateVacuum();
 void deactivateVacuum();
 void enableXMotor();
 void disableXMotor();
+
+// OTA functions
+void initWiFi();
+void initOTA();
+void handleOTA();
+void displayIP();
 
 #endif 

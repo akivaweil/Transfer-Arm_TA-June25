@@ -3,6 +3,7 @@
 #include <ESP32Servo.h>
 #include <Bounce2.h>
 #include "globals.h"
+#include "OTA_Manager.h"
 
 // Function declarations
 void setupPins();
@@ -52,6 +53,9 @@ void setup() {
   Serial.begin(115200);
   Serial.println("Transfer Arm Starting...");
   
+  // Initialize OTA functionality
+  initOTA();
+  
   // Configure pins
   setupPins();
   
@@ -72,6 +76,9 @@ void setup() {
 //* ************************ MAIN LOOP - STATE MACHINE ********************
 //* ************************************************************************
 void loop() {
+  // Handle OTA updates
+  handleOTA();
+  
   // Update all debouncers first
   xHomeSwitch.update();
   zHomeSwitch.update();
