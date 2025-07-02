@@ -22,6 +22,7 @@ extern const float X_DROPOFF_POS_INCHES;    // X-axis dropoff position (20 inche
 extern const float X_DROPOFF_OVERSHOOT_INCHES;  // 3 inches past dropoff for servo rotation
 extern const float X_SERVO_ROTATE_INCHES;  // Start servo rotation 2 inches before dropoff
 extern const float X_MIDPOINT_INCHES;  // Midpoint kept for reference
+extern const float X_PRE_HOMING_POS_INCHES;  // Position to move to before X-axis homing (0.5 inches)
 
 // Z-axis distances in inches
 extern const float Z_PICKUP_LOWER_INCHES;   // Lower Z-axis by 5 inches for pickup
@@ -34,6 +35,7 @@ extern const float X_DROPOFF_POS;
 extern const float X_DROPOFF_OVERSHOOT_POS;  // Overshoot position in steps
 extern const float X_SERVO_ROTATE_POS;  // Position to start servo rotation for dropoff
 extern const float X_MIDPOINT_POS;  // Kept for reference
+extern const float X_PRE_HOMING_POS;  // Pre-homing position in steps
 
 extern const float Z_UP_POS;  // Z-axis fully up position
 extern const float Z_PICKUP_POS;  // Z-axis down position for pickup

@@ -122,7 +122,7 @@ void TransferArm::configureDebouncers() {
   smartLog("Configuring debouncers...");
   
   xHomeSwitch.attach((int)X_HOME_SWITCH_PIN);
-  xHomeSwitch.interval(2);  // 2ms debounce
+  xHomeSwitch.interval(1);  // 1ms debounce
 
   zHomeSwitch.attach((int)Z_HOME_SWITCH_PIN);
   zHomeSwitch.interval(2);  // 2ms debounce

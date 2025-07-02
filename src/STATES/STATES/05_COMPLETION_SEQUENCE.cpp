@@ -45,10 +45,10 @@ void updateCompletionSequence() {
 
     case COMPLETION_RETURN_TO_PICKUP_PRE_HOME:
       // Return to pickup position to prepare for homing - BLOCKING
-      transferArm.getXStepper().moveTo(.3);
-      smartLog("Moving X to pickup position (pre-homing): " + String(X_PICKUP_POS));
+      transferArm.getXStepper().moveTo(X_PRE_HOMING_POS);
+      smartLog("Moving X to pre-homing position: " + String(X_PRE_HOMING_POS_INCHES) + " inches");
       transferArm.getXStepper().runToPosition();  // Blocking call
-      smartLog("X reached pickup position (pre-homing), initiating X-axis homing");
+      smartLog("X reached pre-homing position, initiating X-axis homing");
       //! Step 2: Home X-axis
       currentCompletionState = COMPLETION_HOME_X_AXIS_STATE;
       break;
