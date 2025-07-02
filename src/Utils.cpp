@@ -87,26 +87,30 @@ void resetStateTimer(unsigned long* timer) {
 
 // Set servo to pickup position
 void setServoPickup() {
-  transferArm.setServoPosition(SERVO_PICKUP_POS);
-  smartLog("Servo set to pickup position: " + String(SERVO_PICKUP_POS));
+  smartLog("Utils: Setting servo to pickup position");
+  transferArm.setServoPositionAndWait(SERVO_PICKUP_POS, SERVO_SMALL_MOVE_WAIT);
+  smartLog("Utils: Servo confirmed at pickup position: " + String(SERVO_PICKUP_POS));
 }
 
 // Set servo to travel position
 void setServoTravel() {
-  transferArm.setServoPosition(SERVO_TRAVEL_POS);
-  smartLog("Servo set to travel position: " + String(SERVO_TRAVEL_POS));
+  smartLog("Utils: Setting servo to travel position");
+  transferArm.setServoPositionAndWait(SERVO_TRAVEL_POS, SERVO_SMALL_MOVE_WAIT);
+  smartLog("Utils: Servo confirmed at travel position: " + String(SERVO_TRAVEL_POS));
 }
 
 // Set servo to dropoff position
 void setServoDropoff() {
-  transferArm.setServoPosition(SERVO_DROPOFF_POS);
-  smartLog("Servo set to dropoff position: " + String(SERVO_DROPOFF_POS));
+  smartLog("Utils: Setting servo to dropoff position");
+  transferArm.setServoPositionAndWait(SERVO_DROPOFF_POS, SERVO_LARGE_MOVE_WAIT);
+  smartLog("Utils: Servo confirmed at dropoff position: " + String(SERVO_DROPOFF_POS));
 }
 
 // Set servo to home position
 void setServoHome() {
-  transferArm.setServoPosition(SERVO_HOME_POS);
-  smartLog("Servo set to home position: " + String(SERVO_HOME_POS));
+  smartLog("Utils: Setting servo to home position");
+  transferArm.setServoPositionAndWait(SERVO_HOME_POS, SERVO_SMALL_MOVE_WAIT);
+  smartLog("Utils: Servo confirmed at home position: " + String(SERVO_HOME_POS));
 }
 
 //* ************************************************************************

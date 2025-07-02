@@ -34,8 +34,9 @@ void updateTransportSequence() {
   switch (currentTransportState) {
     case TRANSPORT_ROTATE_SERVO_TO_TRAVEL:
       // Rotate servo to travel position after pickup
-      transferArm.setServoPosition(SERVO_TRAVEL_POS);
-      smartLog("Servo rotated to travel position, moving to dropoff overshoot");
+      smartLog("Rotating servo from pickup to travel position");
+      transferArm.setServoPositionAndWait(SERVO_TRAVEL_POS, SERVO_SMALL_MOVE_WAIT);
+      smartLog("Servo at travel position, moving to dropoff overshoot");
       //! Step 1: Move to Dropoff Overshoot Position
       currentTransportState = TRANSPORT_MOVE_TO_OVERSHOOT;
       break;
@@ -45,17 +46,30 @@ void updateTransportSequence() {
       transferArm.getXStepper().moveTo(X_DROPOFF_OVERSHOOT_POS);
       smartLog("Moving X to dropoff overshoot position: " + String(X_DROPOFF_OVERSHOOT_POS));
       transferArm.getXStepper().runToPosition();  // Blocking call
-      smartLog("X reached dropoff overshoot position, rotating servo to dropoff position");
-      transferArm.setServoPosition(SERVO_DROPOFF_POS);
+      smartLog("X reached dropoff overshoot position");
+      
+      // Add servo diagnostics before critical rotation
+      smartLog(transferArm.getServoDiagnostics());
+      
+      // Add a small pause before servo movement to avoid timing conflicts
+      delay(100);
+      smartLog("Starting servo rotation to dropoff position...");
+      
+      // Use enhanced servo control with proper timing
+      transferArm.setServoPositionAndWait(SERVO_DROPOFF_POS, SERVO_LARGE_MOVE_WAIT);
+      
+      // Additional verification wait and diagnostics
+      smartLog(transferArm.getServoDiagnostics());
       transportStateTimer = 0;
+      smartLog("Servo rotation command completed, waiting for final settling");
       //! Step 2: Wait for Servo Rotation
       currentTransportState = TRANSPORT_WAIT_FOR_SERVO_ROTATION;
       break;
 
     case TRANSPORT_WAIT_FOR_SERVO_ROTATION:
-      // Wait for servo to complete rotation at overshoot position
-      if (Wait(SERVO_ROTATION_WAIT_TIME, &transportStateTimer)) {
-        smartLog("Servo rotation complete, returning to dropoff position");
+      // Wait for servo to complete rotation at overshoot position (shorter wait since we already waited during movement)
+      if (Wait(SERVO_SMALL_MOVE_WAIT, &transportStateTimer)) {
+        smartLog("Final servo settling complete, returning to dropoff position");
         //! Step 3: Return to Dropoff Position
         currentTransportState = TRANSPORT_RETURN_TO_DROPOFF_POS;
       }

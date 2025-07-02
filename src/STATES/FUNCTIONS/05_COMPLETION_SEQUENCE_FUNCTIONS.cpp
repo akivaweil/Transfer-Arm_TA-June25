@@ -17,8 +17,9 @@ void setupStage2Signal() {
 
 // Reset servo to pickup position
 void resetServoToPickupPosition() {
-  transferArm.setServoPosition(SERVO_PICKUP_POS);
-  smartLog("Servo reset to pickup position: " + String(SERVO_PICKUP_POS));
+  smartLog("Completion: Resetting servo to pickup position");
+  transferArm.setServoPositionAndWait(SERVO_PICKUP_POS, SERVO_SMALL_MOVE_WAIT);
+  smartLog("Completion: Servo confirmed at pickup position: " + String(SERVO_PICKUP_POS));
 }
 
 // Move to pickup position with logging - BLOCKING

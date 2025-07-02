@@ -10,14 +10,16 @@
 
 // Set servo to travel position with logging
 void setServoToTravelPosition() {
-  transferArm.setServoPosition(SERVO_TRAVEL_POS);
-  smartLog("Servo set to travel position: " + String(SERVO_TRAVEL_POS));
+  smartLog("Function: Setting servo to travel position");
+  transferArm.setServoPositionAndWait(SERVO_TRAVEL_POS, SERVO_SMALL_MOVE_WAIT);
+  smartLog("Function: Servo confirmed at travel position: " + String(SERVO_TRAVEL_POS));
 }
 
 // Set servo to dropoff position with logging
 void setServoToDropoffPosition() {
-  transferArm.setServoPosition(SERVO_DROPOFF_POS);
-  smartLog("Servo set to dropoff position: " + String(SERVO_DROPOFF_POS));
+  smartLog("Function: Setting servo to dropoff position");
+  transferArm.setServoPositionAndWait(SERVO_DROPOFF_POS, SERVO_LARGE_MOVE_WAIT);
+  smartLog("Function: Servo confirmed at dropoff position: " + String(SERVO_DROPOFF_POS));
 }
 
 // Move to overshoot position - BLOCKING

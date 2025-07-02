@@ -57,7 +57,9 @@ class TransferArm {
 
   // Servo control methods
   void setServoPosition(float position);
+  void setServoPositionAndWait(float position, unsigned long waitTime);
   float getServoPosition() const { return currentServoPosition; }
+  String getServoDiagnostics();
 
   // Status methods
   bool isXMoving() { return xStepper.isRunning(); }

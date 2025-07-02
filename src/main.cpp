@@ -173,9 +173,40 @@ void TransferArm::configureServo() {
 
 // Set servo position
 void TransferArm::setServoPosition(float position) {
+  float currentPos = currentServoPosition;
+  float moveDistance = abs(position - currentPos);
+  
+  // Log the movement details
+  smartLog("Servo moving from " + String(currentPos) + "° to " + String(position) + "° (distance: " + String(moveDistance) + "°)");
+  
+  // Write the new position
   gripperServo.write((int)position);
   currentServoPosition = position;
-  smartLog("Servo set to position: " + String(position));
+  
+  // Add a small delay for large movements to help servo settle
+  if (moveDistance > 45.0) {
+    delay(50);  // Small hardware delay for large movements
+    smartLog("Large servo movement - added settling delay");
+  }
+  
+  smartLog("Servo command sent to position: " + String(position) + "°");
+}
+
+// Set servo position and wait for completion (blocking)
+void TransferArm::setServoPositionAndWait(float position, unsigned long waitTime) {
+  setServoPosition(position);
+  smartLog("Waiting " + String(waitTime) + "ms for servo to complete movement");
+  delay(waitTime);
+  smartLog("Servo wait complete - position should be: " + String(position) + "°");
+}
+
+// Get servo diagnostic information
+String TransferArm::getServoDiagnostics() {
+  String diagnostics = "Servo Diagnostics: ";
+  diagnostics += "Current Position: " + String(currentServoPosition) + "° ";
+  diagnostics += "Pin: " + String(SERVO_PIN) + " ";
+  diagnostics += "Attached: " + String(gripperServo.attached() ? "Yes" : "No");
+  return diagnostics;
 }
 
 //* ************************************************************************
