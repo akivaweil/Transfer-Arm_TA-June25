@@ -34,6 +34,7 @@ void updateIdleState() {
         smartLog("Pick Cycle Triggered from idle state");
         currentIdleState = TRIGGER_DETECTED;
         idleStateTimer = 0;
+        
       }
       break;
       

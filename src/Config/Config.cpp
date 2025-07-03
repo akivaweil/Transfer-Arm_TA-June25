@@ -59,8 +59,8 @@ const unsigned long SERVO_ROTATION_WAIT_TIME = 500;  // Wait time for servo to c
 // Stepper settings
 const float X_MAX_SPEED = 15000.0;      // Maximum speed for X-axis in steps per second
 const float X_ACCELERATION = 20000.0;   // Acceleration for X-axis in steps per second^2
-const float Z_MAX_SPEED = 12000.0;      // Maximum speed for Z-axis in steps per second
-const float Z_ACCELERATION = 12000.0;   // Acceleration for Z-axis in steps per second^2
+const float Z_MAX_SPEED = 8000.0;      // Maximum speed for Z-axis in steps per second
+const float Z_ACCELERATION = 4000.0;   // Acceleration for Z-axis in steps per second^2
 const float Z_DROPOFF_MAX_SPEED = Z_MAX_SPEED / 1.0;  // Same speed for now for dropoff
 const float Z_DROPOFF_ACCELERATION = Z_ACCELERATION / 1.0;  // Same acceleration for now for dropoff
 const float X_HOME_SPEED = 1500.0;      // Homing speed for X-axis in steps per second

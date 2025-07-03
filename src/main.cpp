@@ -125,7 +125,7 @@ void TransferArm::configureDebouncers() {
   xHomeSwitch.interval(1);  // 1ms debounce
 
   zHomeSwitch.attach((int)Z_HOME_SWITCH_PIN);
-  zHomeSwitch.interval(2);  // 2ms debounce
+  zHomeSwitch.interval(3);  // 3ms debounce
 
   startButton.attach((int)START_BUTTON_PIN);
   startButton.interval(10);  // 10ms debounce
