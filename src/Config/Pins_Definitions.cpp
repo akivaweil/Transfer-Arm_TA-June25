@@ -9,7 +9,7 @@
 const int START_BUTTON_PIN = 2;    // Start button input (active high)
 const int STAGE1_SIGNAL_PIN = 23;  // Stage 1 machine signal input (active high)
 const int X_HOME_SWITCH_PIN = 15;  // X-axis home limit switch (active high)
-const int Z_HOME_SWITCH_PIN = 13;  // Z-axis home limit switch (active high)
+const int Z_HOME_SWITCH_PIN = 21;  // Z-axis home limit switch (active high)
 const int STOP_SIGNAL_STAGE_2 = 22;   // Stage 2 safety signal (active high, wait for low)
 
 // Outputs
