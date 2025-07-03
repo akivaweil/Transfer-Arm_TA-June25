@@ -41,12 +41,9 @@ TransferArm::TransferArm()
 
 // Main initialization method - replaces the old setup() function
 void TransferArm::begin() {
-  // Initialize serial communication
-  Serial.begin(115200);
+  // Serial communication already initialized in setup()
   
   smartLog("Transfer Arm Initialization Starting...");
-
-
 
   // Configure all hardware components
   configurePins();
@@ -236,11 +233,22 @@ void TransferArm::sendSerialMessage(const String& message) {
 
 // Arduino setup function - runs once at startup
 void setup() {
-    //! Initialize OTA functionality
+  // Initialize serial communication first
+  Serial.begin(115200);
+  delay(1000);  // Give serial time to initialize
+  
+  Serial.println("\n=== TRANSFER ARM STARTING ===");
+  
+  //! Initialize OTA functionality
   initOTA();
-  // Initialize the Transfer Arm system
+  
+  // Display IP clearly
   displayIP();
+  
+  // Initialize the Transfer Arm system
   transferArm.begin();
+  
+  Serial.println("=== TRANSFER ARM READY ===\n");
 }
 
 // Arduino loop function - runs repeatedly

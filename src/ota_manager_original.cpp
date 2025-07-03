@@ -92,6 +92,9 @@ void handleOTA() {
 }
 
 void displayIP() {
-  //! Display IP - function disabled per user request
-  // IP display only during startup, not periodic
+  //! Display IP at startup only
+  Serial.println("\n=== TRANSFER ARM IP ADDRESS ===");
+  Serial.print("ESP32 IP: ");
+  Serial.println(WiFi.localIP());
+  Serial.println("================================\n");
 } 
