@@ -42,22 +42,39 @@ TransferArm::TransferArm()
 // Main initialization method - replaces the old setup() function
 void TransferArm::begin() {
   // Serial communication already initialized in setup()
-  
+  Serial.println("DEBUG: transferArm.begin() started");
+
   smartLog("Transfer Arm Initialization Starting...");
 
   // Configure all hardware components
+  Serial.println("DEBUG: Configuring pins...");
   configurePins();
+  Serial.println("DEBUG: Pins configured.");
+
+  Serial.println("DEBUG: Configuring debouncers...");
   configureDebouncers();
+  Serial.println("DEBUG: Debouncers configured.");
+
+  Serial.println("DEBUG: Configuring steppers...");
   configureSteppers();
+  Serial.println("DEBUG: Steppers configured.");
+
+  Serial.println("DEBUG: Configuring servo...");
   configureServo();
+  Serial.println("DEBUG: Servo configured.");
 
   // Initialize pick cycle state machine
+  Serial.println("DEBUG: Initializing pick cycle...");
   initializePickCycle();
+  Serial.println("DEBUG: Pick cycle initialized.");
 
   // Home the system (automatic on startup - no user input required)
+  Serial.println("DEBUG: Homing system...");
   homeSystem();
+  Serial.println("DEBUG: System homed.");
 
   smartLog("Transfer Arm Initialized Successfully");
+  Serial.println("DEBUG: transferArm.begin() finished");
 }
 
 // Main update method - replaces the old loop() function

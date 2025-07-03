@@ -21,14 +21,14 @@ const float Z_HOME_POS = 0.0;  // Z-axis home position (in steps)
 
 // X-axis positions in inches from home
 const float X_PICKUP_POS_INCHES = 1.0;      // X-axis pickup position (1 inch)
-const float X_DROPOFF_POS_INCHES = 20.35;    // X-axis dropoff position (20 inches)
+const float X_DROPOFF_POS_INCHES = 20.50;    // X-axis dropoff position (20 inches)
 const float X_DROPOFF_OVERSHOOT_INCHES = X_DROPOFF_POS_INCHES + 1.75;  // 3 inches past dropoff for servo rotation
 const float X_SERVO_ROTATE_INCHES = X_DROPOFF_POS_INCHES - 2.0;  // Start servo rotation 2 inches before dropoff
 const float X_MIDPOINT_INCHES = (X_PICKUP_POS_INCHES + X_DROPOFF_POS_INCHES) / 2.0;  // Midpoint kept for reference
-const float X_PRE_HOMING_POS_INCHES = 0.5;  // Position to move to before X-axis homing (0.5 inches)
+const float X_PRE_HOMING_POS_INCHES = 1.0;  // Position to move to before X-axis homing (0.5 inches)
 
 // Z-axis distances in inches
-const float Z_PICKUP_LOWER_INCHES = 6.8;   // Lower Z-axis by 5 inches for pickup
+const float Z_PICKUP_LOWER_INCHES = 6.6;   // Lower Z-axis by 5 inches for pickup
 const float Z_SUCTION_START_INCHES = 4.0;  // Start suction when Z is 4 inches down
 const float Z_DROPOFF_LOWER_INCHES = 6.4;  // Lower Z-axis by 5.5 inches for dropoff
 
@@ -59,8 +59,8 @@ const unsigned long SERVO_ROTATION_WAIT_TIME = 500;  // Wait time for servo to c
 // Stepper settings
 const float X_MAX_SPEED = 15000.0;      // Maximum speed for X-axis in steps per second
 const float X_ACCELERATION = 20000.0;   // Acceleration for X-axis in steps per second^2
-const float Z_MAX_SPEED = 8000.0;      // Maximum speed for Z-axis in steps per second
-const float Z_ACCELERATION = 4000.0;   // Acceleration for Z-axis in steps per second^2
+const float Z_MAX_SPEED = 10000.0;      // Maximum speed for Z-axis in steps per second
+const float Z_ACCELERATION = 10000.0;   // Acceleration for Z-axis in steps per second^2
 const float Z_DROPOFF_MAX_SPEED = Z_MAX_SPEED / 1.0;  // Same speed for now for dropoff
 const float Z_DROPOFF_ACCELERATION = Z_ACCELERATION / 1.0;  // Same acceleration for now for dropoff
 const float X_HOME_SPEED = 1500.0;      // Homing speed for X-axis in steps per second
