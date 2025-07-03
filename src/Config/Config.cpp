@@ -55,6 +55,7 @@ const float SERVO_DROPOFF_POS = 92.0; // Servo dropoff position (90 degrees from
 const unsigned long PICKUP_HOLD_TIME = 300;  // Hold time at pickup position (300ms)
 const unsigned long DROPOFF_HOLD_TIME = 100; // Hold time at dropoff position (100ms)
 const unsigned long SERVO_ROTATION_WAIT_TIME = 500;  // Wait time for servo to complete rotation at overshoot position (500ms)
+const unsigned long HOMING_TIMEOUT = 5000;   // Homing timeout (5 seconds)
 
 // Stepper settings
 const float X_MAX_SPEED = 15000.0;      // Maximum speed for X-axis in steps per second

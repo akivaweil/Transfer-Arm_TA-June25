@@ -131,3 +131,22 @@ void homeXAxis() {
   smartLog("X axis homed");
   Serial.println("DEBUG: homeXAxis() completed");
 }
+
+// Check home switch status
+bool isXHomeSwitchActive() {
+  transferArm.getXHomeSwitch().update();
+  return transferArm.getXHomeSwitch().read() == HIGH;
+}
+
+bool isZHomeSwitchActive() {
+  transferArm.getZHomeSwitch().update();
+  return transferArm.getZHomeSwitch().read() == HIGH;
+}
+
+// Get home switch status for debugging
+String getHomeSwitchStatusString() {
+  String status = "Home Switches - ";
+  status += "X: " + String(isXHomeSwitchActive() ? "TRIGGERED" : "CLEAR");
+  status += ", Z: " + String(isZHomeSwitchActive() ? "TRIGGERED" : "CLEAR");
+  return status;
+} 

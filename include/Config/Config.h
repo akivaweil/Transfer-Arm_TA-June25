@@ -52,6 +52,7 @@ extern const float SERVO_DROPOFF_POS; // Servo dropoff position (90 degrees from
 extern const unsigned long PICKUP_HOLD_TIME;  // Hold time at pickup position (300ms)
 extern const unsigned long DROPOFF_HOLD_TIME; // Hold time at dropoff position (100ms)
 extern const unsigned long SERVO_ROTATION_WAIT_TIME;  // Wait time for servo to complete rotation at overshoot position (500ms)
+extern const unsigned long HOMING_TIMEOUT;   // Homing timeout (5 seconds)
 
 // Stepper settings
 extern const float X_MAX_SPEED;      // Maximum speed for X-axis in steps per second
