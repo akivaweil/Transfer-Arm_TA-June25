@@ -245,7 +245,7 @@ void signalStage2() {
 //* ************************ LOGGING FUNCTIONS ***************************
 //* ************************************************************************
 
-// Smart logging function - outputs to Serial only
+// Smart logging function - no serial output (disabled)
 void smartLog(const String& message) {
-  Serial.println(message);
+  // Serial output disabled per user request
 }

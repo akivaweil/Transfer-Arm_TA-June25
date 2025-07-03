@@ -72,14 +72,7 @@ void TransferArm::update() {
   stage1Signal.update();
   stopSignalStage2.update();
 
-  // Handle serial communication
-  if (Serial.available()) {
-    String command = Serial.readStringUntil('\n');
-    command.trim();
-    if (command.length() > 0) {
-      handleSerialCommand(command);
-    }
-  }
+  // Serial communication disabled
 
   // Update steppers
   xStepper.run();
@@ -212,31 +205,9 @@ bool TransferArm::isStage2SafeForZLowering() {
 //* ************************ COMMUNICATION METHODS ***************************
 //* ************************************************************************
 
-// Handle incoming serial commands
+// Handle incoming serial commands - DISABLED
 void TransferArm::handleSerialCommand(const String& command) {
-  if (command == "status") {
-    Serial.println("Transfer Arm Status:");
-    Serial.println("X Position: " + String(xStepper.currentPosition()));
-    Serial.println("Z Position: " + String(zStepper.currentPosition()));
-    Serial.println("Servo Position: " + String(currentServoPosition));
-    Serial.println("X Moving: " + String(isXMoving() ? "Yes" : "No"));
-    Serial.println("Z Moving: " + String(isZMoving() ? "Yes" : "No"));
-  } else if (command == "home") {
-    Serial.println("Initiating homing sequence...");
-    homeSystem();
-  } else if (command == "cycle") {
-    Serial.println("Triggering pick cycle...");
-    triggerPickCycleFromWeb();
-  } else if (command == "help") {
-    Serial.println("Available commands:");
-    Serial.println("  status - Show system status");
-    Serial.println("  home - Start homing sequence");
-    Serial.println("  cycle - Trigger pick cycle");
-    Serial.println("  help - Show this help");
-  } else {
-    Serial.println("Unknown command: " + command);
-    Serial.println("Type 'help' for available commands");
-  }
+  // Serial command handling disabled per user request
 }
 
 // Send burst request (placeholder for photo capture communication)
@@ -251,10 +222,9 @@ void TransferArm::sendBurstRequest() {
   // digitalWrite(BURST_REQUEST_PIN, LOW);
 }
 
-// Send serial message method
+// Send serial message method - DISABLED
 void TransferArm::sendSerialMessage(const String& message) {
-  Serial.println(message);
-  smartLog("Serial message sent: " + message);
+  // Serial message sending disabled per user request
 }
 
 //* ************************************************************************
