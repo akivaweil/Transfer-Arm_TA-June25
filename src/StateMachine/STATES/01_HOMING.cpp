@@ -5,6 +5,8 @@
 // External references to objects defined in main file
 extern FastAccelStepper *xStepper;
 extern FastAccelStepper *zStepper;
+extern Bounce zHomeSwitch;
+extern Bounce xHomeSwitch;
 
 //* ************************************************************************
 //* ************************ HOMING STATE **********************************

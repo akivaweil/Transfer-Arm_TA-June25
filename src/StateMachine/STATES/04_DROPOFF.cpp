@@ -5,6 +5,7 @@
 // External references to objects defined in main file
 extern FastAccelStepper *zStepper;
 extern unsigned long stateTimer;
+extern Bounce stopSignalStage2;
 
 //* ************************************************************************
 //* ************************ DROPOFF STATE *********************************

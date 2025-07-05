@@ -10,7 +10,7 @@
 float START_BUTTON_PIN = 2.0;     // Start button input (active high)
 float STAGE1_SIGNAL_PIN = 23.0;   // Stage 1 machine signal input (active high)
 float X_HOME_SWITCH_PIN = 15.0;   // X-axis home limit switch (active high)
-float Z_HOME_SWITCH_PIN = 13.0;   // Z-axis home limit switch (active high)
+float Z_HOME_SWITCH_PIN = 21.0;   // Z-axis home limit switch (active high)
 float STOP_SIGNAL_STAGE_2 = 22.0; // Stage 2 safety signal (active high, wait for low)
 
 // OUTPUT PINS - STEPPER MOTORS
