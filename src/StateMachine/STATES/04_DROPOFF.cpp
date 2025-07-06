@@ -68,7 +68,21 @@ bool handleDropoff() {
           zStepper->moveTo((int32_t)Z_UP_POS);
           motorMoving = true;
         }
+        dropoffState = DROPOFF_WAIT_FOR_PARTIAL_RAISE;
+      break;
+
+    case DROPOFF_WAIT_FOR_PARTIAL_RAISE:
+      if (zStepper->getCurrentPosition() <= Z_X_RETURN_START_POS) {
+        // Start moving X and Swivel back to home positions
+        if (xStepper) {
+          xStepper->moveTo((int32_t)X_PICKUP_POS);
+        }
+        if (swivelStepper) {
+          long targetSteps = (long)(SWIVEL_HOME_POS_DEG * (SWIVEL_STEPS_PER_REV / 360.0));
+          swivelStepper->moveTo(targetSteps);
+        }
         dropoffState = DROPOFF_WAIT_FOR_RAISE;
+      }
       break;
       
     case DROPOFF_WAIT_FOR_RAISE:
@@ -86,8 +100,11 @@ bool handleDropoff() {
       break;
       
     case DROPOFF_DONE:
-      dropoffState = DROPOFF_MOVE_X;  // Reset for next cycle
-      return true;  // Dropoff complete
+      if (isMotorAtTarget(xStepper) && isMotorAtTarget(swivelStepper)) {
+        dropoffState = DROPOFF_MOVE_X;  // Reset for next cycle
+        return true;  // Dropoff complete
+      }
+      break;
   }
   
   return false;  // Dropoff not complete

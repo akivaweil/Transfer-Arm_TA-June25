@@ -26,6 +26,7 @@ extern float X_OVERSHOOT_INCHES;  // X overshoot position for servo rotation
 extern float Z_PICKUP_LOWER_INCHES;     // Lower Z for pickup
 extern float Z_DROPOFF_LOWER_INCHES;    // Lower Z for dropoff
 extern float Z_SUCTION_START_INCHES;    // Start suction when this far down
+extern float Z_X_RETURN_START_INCHES;   // Z height to start returning X
 
 //* ************************************************************************
 //* ************************ CONVERTED POSITIONS ***************************
@@ -42,6 +43,7 @@ extern float Z_UP_POS;     // Z-axis fully up position
 extern float Z_PICKUP_POS;     // Z down for pickup
 extern float Z_DROPOFF_POS;   // Z down for dropoff
 extern float Z_SUCTION_START_POS; // Z position to start suction
+extern float Z_X_RETURN_START_POS; // Z position to start returning X
 
 //* ************************************************************************
 //* ************************ TIMING SETTINGS *******************************
