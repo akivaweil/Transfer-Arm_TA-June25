@@ -25,6 +25,7 @@ float X_OVERSHOOT_INCHES = (X_DROPOFF_INCHES + 1.75);  // 1.75" past dropoff for
 float Z_PICKUP_LOWER_INCHES = 6.1;     // Lower Z by 6.1" for pickup (updated from original)
 float Z_DROPOFF_LOWER_INCHES = 6;    // Lower Z by 5.5" for dropoff
 float Z_SUCTION_START_INCHES = 4.0;    // Start suction when 4" down
+float Z_X_RETURN_START_INCHES = 2.0;   // Z height to start returning X
 
 //* ************************************************************************
 //* ************************ CONV333ERTED POSITIONS ***************************
@@ -41,6 +42,7 @@ float Z_UP_POS = 0.0;     // Z-axis fully up position
 float Z_PICKUP_POS = (Z_PICKUP_LOWER_INCHES * STEPS_PER_INCH);     // Z down for pickup
 float Z_DROPOFF_POS = (Z_DROPOFF_LOWER_INCHES * STEPS_PER_INCH);   // Z down for dropoff
 float Z_SUCTION_START_POS = (Z_SUCTION_START_INCHES * STEPS_PER_INCH); // Z position to start suction
+float Z_X_RETURN_START_POS = (Z_X_RETURN_START_INCHES * STEPS_PER_INCH); // Z position to start returning X
 
 //* ************************************************************************
 //* ************************ TIMING SETTINGS *******************************
@@ -57,7 +59,7 @@ float X_MAX_SPEED = 8000.0;  // Steps per second
 float X_ACCELERATION = 12000.0; // Steps per second^2
 float X_HOME_SPEED = 500.0;    // Homing speed
 
-float Z_MAX_SPEED = 7000.0; // Steps per second
+float Z_MAX_SPEED = 6000.0; // Steps per second
 float Z_ACCELERATION = 8000.0; // Steps per second^2
 float Z_HOME_SPEED = 500.0;    // Homing speed
 float Z_DROPOFF_SPEED = 10000.0; // Same speed as normal for dropoff 
