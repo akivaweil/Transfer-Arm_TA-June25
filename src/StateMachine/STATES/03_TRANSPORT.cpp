@@ -15,47 +15,48 @@ extern unsigned long stateTimer;
 
 bool handleTransport() {
   switch(transportState) {
-    case TRANSPORT_ROTATE_TO_TRAVEL:
+    case TRANSPORT_TRAVEL_TO_OVERSHOOT:
+      // Start both movements simultaneously
       if (swivelStepper) {
         long targetSteps = (long)(SWIVEL_TRAVEL_POS_DEG * (SWIVEL_STEPS_PER_REV / 360.0));
         swivelStepper->moveTo(targetSteps);
       }
-      if (isMotorAtTarget(swivelStepper)) {
-        if (xStepper) {
-          xStepper->moveTo((int32_t)X_OVERSHOOT_POS);
-        }
-        transportState = TRANSPORT_MOVE_TO_OVERSHOOT;
+      if (xStepper) {
+        xStepper->moveTo((int32_t)X_OVERSHOOT_POS);
       }
-      break;
-      
-    case TRANSPORT_MOVE_TO_OVERSHOOT:
-      if (isMotorAtTarget(xStepper)) {
-        if (swivelStepper) {
-          long targetSteps = (long)(SWIVEL_DROPOFF_POS_DEG * (SWIVEL_STEPS_PER_REV / 360.0));
-          swivelStepper->moveTo(targetSteps);
-        }
-        transportState = TRANSPORT_ROTATE_TO_DROPOFF;
-      }
+      transportState = TRANSPORT_ROTATE_TO_DROPOFF; // Immediately move to next state to wait
       break;
       
     case TRANSPORT_ROTATE_TO_DROPOFF:
-      if (isMotorAtTarget(swivelStepper)) {
-        if (xStepper) {
-          xStepper->moveTo((int32_t)X_DROPOFF_POS);
+      // Wait for both motors to complete the travel/overshoot move
+      if (isMotorAtTarget(swivelStepper) && isMotorAtTarget(xStepper)) {
+        // Now rotate swivel to dropoff position
+        if (swivelStepper) {
+          long targetSteps = (long)(SWIVEL_DROPOFF_POS_DEG * (SWIVEL_STEPS_PER_REV / 360.0));
+          swivelStepper->moveTo(targetSteps);
         }
         transportState = TRANSPORT_MOVE_TO_DROPOFF;
       }
       break;
       
     case TRANSPORT_MOVE_TO_DROPOFF:
-      if (isMotorAtTarget(xStepper)) {
+      // Wait for swivel to get to dropoff position
+      if (isMotorAtTarget(swivelStepper)) {
+        // Now move X to final dropoff position
+        if (xStepper) {
+          xStepper->moveTo((int32_t)X_DROPOFF_POS);
+        }
         transportState = TRANSPORT_DONE;
       }
       break;
       
     case TRANSPORT_DONE:
-      transportState = TRANSPORT_ROTATE_TO_TRAVEL;  // Reset for next cycle
-      return true;  // Transport complete
+      // Wait for X to get to the dropoff position
+      if (isMotorAtTarget(xStepper)) {
+        transportState = TRANSPORT_TRAVEL_TO_OVERSHOOT;  // Reset for next cycle
+        return true;  // Transport complete
+      }
+      break;
   }
   
   return false;  // Transport not complete

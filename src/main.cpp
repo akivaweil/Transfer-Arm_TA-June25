@@ -41,7 +41,7 @@ Bounce stopSignalStage2 = Bounce();
 //* ************************************************************************
 SystemState systemState = STATE_HOMING;
 PickupState pickupState = PICKUP_MOVE_X;
-TransportState transportState = TRANSPORT_ROTATE_TO_TRAVEL;
+TransportState transportState = TRANSPORT_TRAVEL_TO_OVERSHOOT;
 DropoffState dropoffState = DROPOFF_MOVE_X;
 
 // Timing variables
@@ -176,7 +176,7 @@ void loop() {
     case STATE_PICKUP:
       if (handlePickup()) {
         systemState = STATE_TRANSPORT;
-        transportState = TRANSPORT_ROTATE_TO_TRAVEL;
+        transportState = TRANSPORT_TRAVEL_TO_OVERSHOOT;
       }
       break;
       
