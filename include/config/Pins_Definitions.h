@@ -21,8 +21,12 @@ extern float X_ENABLE_PIN;         // X-axis stepper motor enable pin (active lo
 extern float Z_STEP_PIN;          // Z-axis stepper motor step pin
 extern float Z_DIR_PIN;           // Z-axis stepper motor direction pin
 
+// SWIVEL ARM
+extern float SWIVEL_STEP_PIN;
+extern float SWIVEL_DIR_PIN;
+extern float SWIVEL_ENABLE_PIN;
+
 // OUTPUT PINS - ACTUATORS
-extern float SERVO_PIN;           // Servo control pin
 extern float SOLENOID_RELAY_PIN;  // Solenoid relay control pin
 extern float STAGE2_SIGNAL_PIN;   // Signal output to Stage 2 machine (active high)
 

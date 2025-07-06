@@ -44,21 +44,11 @@ extern float Z_DROPOFF_POS;   // Z down for dropoff
 extern float Z_SUCTION_START_POS; // Z position to start suction
 
 //* ************************************************************************
-//* ************************ SERVO SETTINGS ********************************
-//* ************************************************************************
-// Servo settings (in degrees)
-extern float SERVO_HOME_POS;      // Neutral position
-extern float SERVO_PICKUP_POS;    // Pickup orientation
-extern float SERVO_TRAVEL_POS;     // Travel position
-extern float SERVO_DROPOFF_POS;   // Dropoff orientation
-
-//* ************************************************************************
 //* ************************ TIMING SETTINGS *******************************
 //* ************************************************************************
 // Timing settings (in milliseconds)
 extern float PICKUP_HOLD_TIME;     // Hold time at pickup position
 extern float DROPOFF_HOLD_TIME;    // Hold time at dropoff position
-extern float SERVO_ROTATION_TIME;  // Wait time for servo rotation
 
 //* ************************************************************************
 //* ************************ STEPPER MOTOR SETTINGS ***********************
@@ -71,5 +61,16 @@ extern float Z_MAX_SPEED; // Steps per second
 extern float Z_ACCELERATION; // Steps per second^2
 extern float Z_HOME_SPEED;    // Homing speed
 extern float Z_DROPOFF_SPEED; // Dropoff speed
+
+//* ************************************************************************
+//* ************************ SWIVEL ARM SETTINGS **********************
+//* ************************************************************************
+extern float SWIVEL_STEPS_PER_REV;
+extern float SWIVEL_MAX_SPEED;
+extern float SWIVEL_ACCELERATION;
+extern float SWIVEL_HOME_POS_DEG;
+extern float SWIVEL_PICKUP_POS_DEG;
+extern float SWIVEL_TRAVEL_POS_DEG;
+extern float SWIVEL_DROPOFF_POS_DEG;
 
 #endif 

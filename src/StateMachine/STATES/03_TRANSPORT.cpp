@@ -1,38 +1,45 @@
 #include <Arduino.h>
 #include <FastAccelStepper.h>
-#include <ESP32Servo.h>
 #include "globals.h"
 
 // External references to objects defined in main file
 extern FastAccelStepper *xStepper;
-extern Servo gripperServo;
+extern FastAccelStepper *swivelStepper;
 extern unsigned long stateTimer;
 
 //* ************************************************************************
 //* ************************ TRANSPORT STATE *******************************
 //* ************************************************************************
 // This state handles transporting the object from pickup to dropoff:
-// Rotate servo, move to overshoot, rotate servo again, move to dropoff
+// Rotate swivel arm, move to overshoot, rotate swivel arm again, move to dropoff
 
 bool handleTransport() {
   switch(transportState) {
-    case TRANSPORT_ROTATE_SERVO:
-      gripperServo.write((int)SERVO_TRAVEL_POS);
-      if (xStepper) {
-        xStepper->moveTo((int32_t)X_OVERSHOOT_POS);
+    case TRANSPORT_ROTATE_TO_TRAVEL:
+      if (swivelStepper) {
+        long targetSteps = (long)(SWIVEL_TRAVEL_POS_DEG * (SWIVEL_STEPS_PER_REV / 360.0));
+        swivelStepper->moveTo(targetSteps);
       }
-      transportState = TRANSPORT_MOVE_TO_OVERSHOOT;
+      if (isMotorAtTarget(swivelStepper)) {
+        if (xStepper) {
+          xStepper->moveTo((int32_t)X_OVERSHOOT_POS);
+        }
+        transportState = TRANSPORT_MOVE_TO_OVERSHOOT;
+      }
       break;
       
     case TRANSPORT_MOVE_TO_OVERSHOOT:
       if (isMotorAtTarget(xStepper)) {
-        gripperServo.write((int)SERVO_DROPOFF_POS);
-        transportState = TRANSPORT_WAIT_SERVO;
+        if (swivelStepper) {
+          long targetSteps = (long)(SWIVEL_DROPOFF_POS_DEG * (SWIVEL_STEPS_PER_REV / 360.0));
+          swivelStepper->moveTo(targetSteps);
+        }
+        transportState = TRANSPORT_ROTATE_TO_DROPOFF;
       }
       break;
       
-    case TRANSPORT_WAIT_SERVO:
-      if (waitForTime((unsigned long)SERVO_ROTATION_TIME)) {
+    case TRANSPORT_ROTATE_TO_DROPOFF:
+      if (isMotorAtTarget(swivelStepper)) {
         if (xStepper) {
           xStepper->moveTo((int32_t)X_DROPOFF_POS);
         }
@@ -47,7 +54,7 @@ bool handleTransport() {
       break;
       
     case TRANSPORT_DONE:
-      transportState = TRANSPORT_ROTATE_SERVO;  // Reset for next cycle
+      transportState = TRANSPORT_ROTATE_TO_TRAVEL;  // Reset for next cycle
       return true;  // Transport complete
   }
   

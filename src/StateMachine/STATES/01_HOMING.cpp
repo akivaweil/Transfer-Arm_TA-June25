@@ -5,6 +5,7 @@
 // External references to objects defined in main file
 extern FastAccelStepper *xStepper;
 extern FastAccelStepper *zStepper;
+extern FastAccelStepper *swivelStepper;
 extern Bounce zHomeSwitch;
 extern Bounce xHomeSwitch;
 
@@ -36,21 +37,33 @@ bool handleHoming() {
           zStepper->moveTo((int32_t)Z_UP_POS);  // Move up 5 inches
         }
         Serial.println("Z-axis homed. Moving up...");
-        homingStep = 2;
-      }
-      break;
-      
-    case 2:  // Wait for Z to reach up position
-      if (isMotorAtTarget(zStepper)) {
-        if (xStepper) {
-          xStepper->setSpeedInHz((uint32_t)X_HOME_SPEED);
-          xStepper->move(-50000);  // Move negative direction
-        }
         homingStep = 3;
       }
       break;
       
-    case 3:  // Wait for X home switch
+    case 2:  // Wait for Z to reach up position, then rotate swivel (commented out for now)
+      // if (isMotorAtTarget(zStepper)) {
+      //   if (swivelStepper) {
+      //     long targetSteps = (long)(180.0 * (SWIVEL_STEPS_PER_REV / 360.0));
+      //     swivelStepper->moveTo(targetSteps);
+      //   }
+      //   Serial.println("Z-axis at top. Rotating Swivel Arm 180 degrees...");
+      //   homingStep = 3;
+      // }
+      break;
+      
+    case 3:  // Wait for swivel to finish, then start X homing
+      // if (isMotorAtTarget(swivelStepper)) {
+      //   swivelStepper->setCurrentPosition(0);
+        if (xStepper) {
+          xStepper->setSpeedInHz((uint32_t)X_HOME_SPEED);
+          xStepper->move(-50000);  // Move negative direction
+        }
+        homingStep = 4;
+      // }
+      break;
+      
+    case 4:  // Wait for X home switch
       if (xHomeSwitch.read() == HIGH) {
         if (xStepper) {
           xStepper->forceStop();
@@ -58,11 +71,11 @@ bool handleHoming() {
           xStepper->setSpeedInHz((uint32_t)X_MAX_SPEED);
           xStepper->moveTo((int32_t)X_PICKUP_POS);  // Move to pickup
         }
-        homingStep = 4;
+        homingStep = 5;
       }
       break;
       
-    case 4:  // Wait for X to reach pickup
+    case 5:  // Wait for X to reach pickup
       if (isMotorAtTarget(xStepper)) {
         homingStep = 0;   // Reset for next homing
         return true;      // Homing complete

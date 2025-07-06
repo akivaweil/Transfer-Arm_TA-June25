@@ -30,6 +30,7 @@ enum SystemState {
 
 enum PickupState {
   PICKUP_MOVE_X,
+  PICKUP_ROTATE_SWIVEL,
   PICKUP_LOWER_Z,
   PICKUP_WAIT,
   PICKUP_RAISE_Z,
@@ -37,18 +38,23 @@ enum PickupState {
 };
 
 enum TransportState {
-  TRANSPORT_ROTATE_SERVO,
+  TRANSPORT_ROTATE_TO_TRAVEL,
   TRANSPORT_MOVE_TO_OVERSHOOT,
-  TRANSPORT_WAIT_SERVO,
+  TRANSPORT_ROTATE_TO_DROPOFF,
   TRANSPORT_MOVE_TO_DROPOFF,
   TRANSPORT_DONE
 };
 
 enum DropoffState {
+  DROPOFF_MOVE_X,
+  DROPOFF_ROTATE_SWIVEL,
   DROPOFF_LOWER_Z,
+  DROPOFF_WAIT_FOR_LOWER,
   DROPOFF_RELEASE,
   DROPOFF_WAIT,
   DROPOFF_RAISE_Z,
+  DROPOFF_WAIT_FOR_RAISE,
+  DROPOFF_SIGNAL_WAIT,
   DROPOFF_DONE
 };
 
@@ -60,13 +66,14 @@ extern PickupState pickupState;
 extern TransportState transportState;
 extern DropoffState dropoffState;
 
+extern bool motorMoving;
+
 //* ************************************************************************
 //* ************************ FUNCTION DECLARATIONS *************************
 //* ************************************************************************
 // Hardware setup functions
 void setupPins();
 void setupSteppers(); 
-void setupServo();
 void setupDebouncers();
 
 // State handler functions

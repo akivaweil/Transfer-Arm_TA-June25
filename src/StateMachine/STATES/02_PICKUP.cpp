@@ -1,12 +1,11 @@
 #include <Arduino.h>
 #include <FastAccelStepper.h>
-#include <ESP32Servo.h>
 #include "globals.h"
 
 // External references to objects defined in main file
 extern FastAccelStepper *xStepper;
 extern FastAccelStepper *zStepper;
-extern Servo gripperServo;
+extern FastAccelStepper *swivelStepper;
 extern unsigned long stateTimer;
 extern bool vacuumActive;
 
@@ -14,7 +13,7 @@ extern bool vacuumActive;
 //* ************************ PICKUP STATE **********************************
 //* ************************************************************************
 // This state handles the pickup sequence:
-// Move X to pickup position, set servo, lower Z, activate vacuum, wait, raise Z
+// Move X to pickup position, rotate swivel arm, lower Z, activate vacuum, wait, raise Z
 
 bool handlePickup() {
   switch(pickupState) {
@@ -23,7 +22,16 @@ bool handlePickup() {
         xStepper->moveTo((int32_t)X_PICKUP_POS);
       }
       if (isMotorAtTarget(xStepper)) {
-        gripperServo.write((int)SERVO_PICKUP_POS);
+        pickupState = PICKUP_ROTATE_SWIVEL;
+      }
+      break;
+
+    case PICKUP_ROTATE_SWIVEL:
+      if (swivelStepper) {
+        long targetSteps = (long)(SWIVEL_PICKUP_POS_DEG * (SWIVEL_STEPS_PER_REV / 360.0));
+        swivelStepper->moveTo(targetSteps);
+      }
+      if (isMotorAtTarget(swivelStepper)) {
         pickupState = PICKUP_LOWER_Z;
       }
       break;

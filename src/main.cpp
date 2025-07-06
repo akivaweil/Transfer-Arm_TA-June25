@@ -1,13 +1,11 @@
 #include <Arduino.h>
 #include <FastAccelStepper.h>
-#include <ESP32Servo.h>
 #include <Bounce2.h>
 #include "globals.h"
 
 // Function declarations
 void setupPins();
-void setupSteppers(); 
-void setupServo();
+void setupSteppers();
 void setupDebouncers();
 bool handleHoming();
 bool handleIdle();
@@ -27,7 +25,7 @@ void handleOTA();
 FastAccelStepperEngine engine = FastAccelStepperEngine();
 FastAccelStepper *xStepper = NULL;
 FastAccelStepper *zStepper = NULL;
-Servo gripperServo;
+FastAccelStepper *swivelStepper = NULL;
 
 //* ************************************************************************
 //* ************************ BOUNCE2 OBJECTS *******************************
@@ -43,20 +41,18 @@ Bounce stopSignalStage2 = Bounce();
 //* ************************************************************************
 SystemState systemState = STATE_HOMING;
 PickupState pickupState = PICKUP_MOVE_X;
-TransportState transportState = TRANSPORT_ROTATE_SERVO;
-DropoffState dropoffState = DROPOFF_LOWER_Z;
+TransportState transportState = TRANSPORT_ROTATE_TO_TRAVEL;
+DropoffState dropoffState = DROPOFF_MOVE_X;
 
 // Timing variables
 unsigned long stateTimer = 0;
 bool vacuumActive = false;
+bool motorMoving = false;
 
 //* ************************************************************************
 //* ************************ SETUP FUNCTION ********************************
 //* ************************************************************************
 void setup() {
-  Serial.begin(115200);
-  Serial.println("Transfer Arm Starting...");
-  
   // Initialize OTA functionality
   initOTA();
   
@@ -69,10 +65,6 @@ void setup() {
   // Configure steppers
   setupSteppers();
   
-  // Configure servo
-  setupServo();
-  
-  Serial.println("Hardware initialized. Starting homing sequence...");
   systemState = STATE_HOMING;
 }
 
@@ -91,22 +83,22 @@ void setupPins() {
   pinMode((int)X_ENABLE_PIN, OUTPUT);
   pinMode((int)SOLENOID_RELAY_PIN, OUTPUT);
   pinMode((int)STAGE2_SIGNAL_PIN, OUTPUT);
+  pinMode((int)SWIVEL_ENABLE_PIN, OUTPUT);
   
   // Initial states
   digitalWrite((int)X_ENABLE_PIN, LOW);   // Enable X motor for smooth operation
   digitalWrite((int)SOLENOID_RELAY_PIN, LOW);  // Vacuum off
   digitalWrite((int)STAGE2_SIGNAL_PIN, LOW);   // Stage 2 signal off
+  digitalWrite((int)SWIVEL_ENABLE_PIN, LOW); // Enable swivel motor
 }
 
 void setupDebouncers() {
-  Serial.println("Configuring debouncers...");
-  
   // Configure limit switches with 2ms debounce (same as Transfer-Arm_TA-June25)
   xHomeSwitch.attach((int)X_HOME_SWITCH_PIN);
-  xHomeSwitch.interval(2);  // 2ms debounce
+  xHomeSwitch.interval(1);  // 2ms debounce
   
   zHomeSwitch.attach((int)Z_HOME_SWITCH_PIN);
-  zHomeSwitch.interval(2);  // 2ms debounce
+  zHomeSwitch.interval(1);  // 2ms debounce
   
   // Configure input signals with 10ms debounce
   startButton.attach((int)START_BUTTON_PIN);
@@ -117,8 +109,6 @@ void setupDebouncers() {
   
   stopSignalStage2.attach((int)STOP_SIGNAL_STAGE_2);
   stopSignalStage2.interval(10);  // 10ms debounce
-  
-  Serial.println("Debouncers configured successfully");
 }
 
 void setupSteppers() {
@@ -139,12 +129,15 @@ void setupSteppers() {
     zStepper->setSpeedInHz((uint32_t)Z_MAX_SPEED);
     zStepper->setAcceleration((uint32_t)Z_ACCELERATION);
   }
-}
 
-void setupServo() {
-  gripperServo.attach((int)SERVO_PIN);
-  gripperServo.write((int)SERVO_HOME_POS);
-  // Note: Removed blocking delay for smooth stepper operation
+  swivelStepper = engine.stepperConnectToPin((int)SWIVEL_STEP_PIN);
+  if (swivelStepper) {
+    swivelStepper->setDirectionPin((int)SWIVEL_DIR_PIN);
+    swivelStepper->setEnablePin((int)SWIVEL_ENABLE_PIN);
+    swivelStepper->setAutoEnable(true);
+    swivelStepper->setSpeedInHz((uint32_t)SWIVEL_MAX_SPEED);
+    swivelStepper->setAcceleration((uint32_t)SWIVEL_ACCELERATION);
+  }
 }
 
 //* ************************************************************************
@@ -152,7 +145,9 @@ void setupServo() {
 //* ************************************************************************
 void loop() {
   // Handle OTA updates
-  handleOTA();
+  if (!motorMoving) {
+    handleOTA();
+  }
   
   // Update all debouncers first
   xHomeSwitch.update();
@@ -168,7 +163,6 @@ void loop() {
     case STATE_HOMING:
       if (handleHoming()) {
         systemState = STATE_IDLE;
-        Serial.println("Homing complete. Ready for operation.");
       }
       break;
       
@@ -176,43 +170,35 @@ void loop() {
       if (handleIdle()) {
         systemState = STATE_PICKUP;
         pickupState = PICKUP_MOVE_X;
-        Serial.println("Starting pickup sequence...");
       }
       break;
       
     case STATE_PICKUP:
       if (handlePickup()) {
         systemState = STATE_TRANSPORT;
-        transportState = TRANSPORT_ROTATE_SERVO;
-        Serial.println("Pickup complete. Starting transport...");
+        transportState = TRANSPORT_ROTATE_TO_TRAVEL;
       }
       break;
       
     case STATE_TRANSPORT:
       if (handleTransport()) {
         systemState = STATE_DROPOFF;
-        dropoffState = DROPOFF_LOWER_Z;
-        Serial.println("Transport complete. Starting dropoff...");
+        dropoffState = DROPOFF_MOVE_X;
       }
       break;
       
     case STATE_DROPOFF:
       if (handleDropoff()) {
         systemState = STATE_RETURN_HOME;
-        Serial.println("Dropoff complete. Returning home...");
       }
       break;
       
     case STATE_RETURN_HOME:
       if (handleReturnHome()) {
-        systemState = STATE_IDLE;
-        Serial.println("Cycle complete. Ready for next operation.");
+        systemState = STATE_HOMING;
       }
       break;
   }
-  
-  // Handle serial commands
-  handleSerial();
 } 
 
 //* ************************************************************************
@@ -263,34 +249,4 @@ void disableXMotor() {
 //* ************************ SERIAL COMMUNICATION **************************
 //* ************************************************************************
 void handleSerial() {
-  if (Serial.available()) {
-    String command = Serial.readStringUntil('\n');
-    command.trim();
-    
-    if (command == "status") {
-      Serial.print("State: ");
-      Serial.print(systemState);
-      Serial.print(", X: ");
-      Serial.print(xStepper ? xStepper->getCurrentPosition() : 0);
-      Serial.print(", Z: ");
-      Serial.print(zStepper ? zStepper->getCurrentPosition() : 0);
-      Serial.print(", Vacuum: ");
-      Serial.print(vacuumActive ? "ON" : "OFF");
-      Serial.print(", Start Button: ");
-      Serial.print(startButton.read() ? "HIGH" : "LOW");
-      Serial.print(", Stage1 Signal: ");
-      Serial.println(stage1Signal.read() ? "HIGH" : "LOW");
-    }
-    else if (command == "start" && systemState == STATE_IDLE) {
-      systemState = STATE_PICKUP;
-      pickupState = PICKUP_MOVE_X;
-      Serial.println("Manual start triggered");
-    }
-    else if (command == "stop") {
-      systemState = STATE_IDLE;
-      deactivateVacuum();
-      disableXMotor();
-      Serial.println("Emergency stop - returning to idle");
-    }
-  }
 } 

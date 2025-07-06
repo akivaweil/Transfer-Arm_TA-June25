@@ -20,7 +20,11 @@ float X_ENABLE_PIN = 4.0;         // X-axis stepper motor enable pin (active low
 float Z_STEP_PIN = 19.0;          // Z-axis stepper motor step pin
 float Z_DIR_PIN = 18.0;           // Z-axis stepper motor direction pin
 
+// SWIVEL ARM
+float SWIVEL_STEP_PIN = 13;
+float SWIVEL_DIR_PIN = 12;
+float SWIVEL_ENABLE_PIN = 5;
+
 // OUTPUT PINS - ACTUATORS
-float SERVO_PIN = 26.0;           // Servo control pin
 float SOLENOID_RELAY_PIN = 33.0;  // Solenoid relay control pin
 float STAGE2_SIGNAL_PIN = 25.0;   // Signal output to Stage 2 machine (active high) 
