@@ -19,7 +19,7 @@ float STEPS_PER_INCH = (STEPS_PER_MM * 25.4);
 //* ************************************************************************
 // Position settings (in inches from home)
 float X_PICKUP_INCHES = 1.0;     // X pickup position
-float X_DROPOFF_INCHES = 20.95;  // X dropoff position (updated from original)
+float X_DROPOFF_INCHES = 20.8;  // X dropoff position (updated from original)
 float X_OVERSHOOT_INCHES = (X_DROPOFF_INCHES + 1.75);  // 1.75" past dropoff for servo rotation
 
 float Z_PICKUP_LOWER_INCHES = 7.0;     // Lower Z by 7" for pickup (updated from original)
