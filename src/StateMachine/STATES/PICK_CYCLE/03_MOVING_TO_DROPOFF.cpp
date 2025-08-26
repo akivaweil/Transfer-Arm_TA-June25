@@ -19,6 +19,9 @@ const unsigned long SERVO_ROTATION_DELAY = 500;        // Time to wait for servo
 const float X_OVERSHOOT_POSITION_INCHES = 22.55;       // X overshoot position for servo rotation (inches from home) - updated from original
 const float X_DROPOFF_POSITION_INCHES = 20.8;          // X position for dropoff (inches from home) - updated from original
 
+// Speed settings for X-axis movements - updated from original
+const uint32_t X_TRAVEL_SPEED = 7000;                 // X speed during travel movements (steps/sec) - updated from original
+
 //* ************************************************************************
 //* ************************ EXTERNAL REFERENCES ***************************
 //* ************************************************************************
@@ -41,6 +44,7 @@ bool handleMovingToDropoff() {
     case 0:  // Rotate servo and start moving to overshoot - moving right
       gripperServo.write(SERVO_TRAVEL_ANGLE);
       if (xStepper) {
+        xStepper->setSpeedInHz(X_TRAVEL_SPEED);  // Set proper speed before movement
         xStepper->moveTo((int32_t)(X_OVERSHOOT_POSITION_INCHES * STEPS_PER_INCH));
       }
       transportStep = 1;
@@ -56,6 +60,7 @@ bool handleMovingToDropoff() {
     case 2:  // Wait for servo rotation, then move to dropoff - moving right
       if (waitForTime(SERVO_ROTATION_DELAY)) {
         if (xStepper) {
+          xStepper->setSpeedInHz(X_TRAVEL_SPEED);  // Set proper speed before movement
           xStepper->moveTo((int32_t)(X_DROPOFF_POSITION_INCHES * STEPS_PER_INCH));
         }
         transportStep = 3;

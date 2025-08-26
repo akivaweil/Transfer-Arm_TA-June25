@@ -42,7 +42,7 @@ bool handleAtDropoffPosition() {
       }
       
       if (zStepper) {
-        zStepper->setSpeedInHz(DROPOFF_Z_SPEED);  // Slower for dropoff
+        zStepper->setSpeedInHz(DROPOFF_Z_SPEED);  // Set proper speed before movement
         zStepper->moveTo((int32_t)(Z_DROPOFF_POSITION_INCHES * STEPS_PER_INCH));
       }
       if (isMotorAtTarget(zStepper)) {
@@ -58,7 +58,7 @@ bool handleAtDropoffPosition() {
     case 2:  // Wait for dropoff hold time - stationary
       if (waitForTime(DROPOFF_WAIT_TIME)) {
         if (zStepper) {
-          zStepper->setSpeedInHz(DROPOFF_NORMAL_Z_SPEED);  // Back to normal speed
+          zStepper->setSpeedInHz(DROPOFF_NORMAL_Z_SPEED);  // Set proper speed before movement
           zStepper->moveTo((int32_t)(Z_UP_POSITION_INCHES * STEPS_PER_INCH));
         }
         dropoffStep = 3;

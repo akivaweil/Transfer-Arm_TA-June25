@@ -12,6 +12,9 @@ const int SERVO_HOME_ANGLE = 90;                        // Servo angle when retu
 const float RETURN_X_HOME_INCHES = 0.0;                  // X position to return to home first (inches)
 const float RETURN_X_PICKUP_INCHES = 1.0;                // X position to move to after home (inches) - updated from original
 
+// Speed settings for X-axis return movements - updated from original
+const uint32_t X_RETURN_SPEED = 7000;                   // X speed during return movements (steps/sec) - updated from original
+
 //* ************************************************************************
 //* ************************ EXTERNAL REFERENCES ***************************
 //* ************************************************************************
@@ -34,6 +37,7 @@ bool handleMovingToPickup() {
       digitalWrite((int)STAGE2_SIGNAL_PIN, LOW);  // Turn off Stage 2 signal
       gripperServo.write(SERVO_HOME_ANGLE);    // Reset servo
       if (xStepper) {
+        xStepper->setSpeedInHz(X_RETURN_SPEED);  // Set proper speed before movement
         xStepper->moveTo((int32_t)(RETURN_X_HOME_INCHES * STEPS_PER_INCH));           // Move X home
       }
       returnStep = 1;
@@ -42,6 +46,7 @@ bool handleMovingToPickup() {
     case 1:  // Wait for X to reach home position - moving left
       if (isMotorAtTarget(xStepper)) {
         if (xStepper) {
+          xStepper->setSpeedInHz(X_RETURN_SPEED);  // Set proper speed before movement
           xStepper->moveTo((int32_t)(RETURN_X_PICKUP_INCHES * STEPS_PER_INCH));
         }
         returnStep = 2;

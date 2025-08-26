@@ -15,6 +15,9 @@ const unsigned long PICKUP_WAIT_TIME = 300;               // Time to wait after 
 const float Z_PICKUP_POSITION_INCHES = 7.0;               // Z position for pickup (inches from home) - updated from original
 const float Z_UP_POSITION_INCHES = 0.0;                   // Z position when fully up (inches from home) - updated from original
 
+// Speed settings for pickup movements - updated from original
+const uint32_t Z_PICKUP_SPEED = 10000;                    // Z speed during pickup movements (steps/sec) - updated from original
+
 //* ************************************************************************
 //* ************************ EXTERNAL REFERENCES ***************************
 //* ************************************************************************
@@ -38,6 +41,7 @@ bool handleAtPickupPosition() {
   switch(pickupStep) {
     case 0:  // Lower Z to pickup position - moving down
       if (zStepper) {
+        zStepper->setSpeedInHz(Z_PICKUP_SPEED);  // Set proper speed before movement
         zStepper->moveTo((int32_t)(Z_PICKUP_POSITION_INCHES * STEPS_PER_INCH));
         // Activate vacuum when halfway down
         if (zStepper->getCurrentPosition() <= (int32_t)(VACUUM_ACTIVATION_INCHES * STEPS_PER_INCH) && !vacuumActive) {
@@ -52,6 +56,7 @@ bool handleAtPickupPosition() {
     case 1:  // Wait at pickup position - stationary
       if (waitForTime(PICKUP_WAIT_TIME)) {
         if (zStepper) {
+          zStepper->setSpeedInHz(Z_PICKUP_SPEED);  // Set proper speed before movement
           zStepper->moveTo((int32_t)(Z_UP_POSITION_INCHES * STEPS_PER_INCH));
         }
         pickupStep = 2;
