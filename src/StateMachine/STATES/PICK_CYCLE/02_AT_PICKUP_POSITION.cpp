@@ -15,10 +15,10 @@ const unsigned long PICKUP_WAIT_TIME = 300;               // Time to wait after 
 const float Z_PICKUP_POSITION_INCHES = 7.0;               // Z position for pickup (inches from home) - updated from original
 const float Z_UP_POSITION_INCHES = 0.0;                   // Z position when fully up (inches from home) - updated from original
 
-// Speed and acceleration settings for pickup movements - updated from original
-// Using maximum speeds from config for optimal performance after homing
-const uint32_t Z_PICKUP_SPEED = (uint32_t)Z_MAX_SPEED;   // Z speed during pickup movements (steps/sec) - using max speed
-const uint32_t Z_PICKUP_ACCELERATION = (uint32_t)Z_ACCELERATION; // Z acceleration during pickup movements (steps/sec^2) - using max acceleration
+// Speed and acceleration settings for pickup movements - 2X HOMING SPEEDS for maximum performance
+// These are 2x faster than homing travel speeds for optimal pick cycle operation
+const uint32_t Z_PICKUP_SPEED = 40000;                    // Z speed during pickup movements (steps/sec) - 2X Z_TRAVEL_SPEED
+const uint32_t Z_PICKUP_ACCELERATION = 8000;             // Z acceleration during pickup movements (steps/sec^2) - 2X Z_HOMING_SPEED
 
 //* ************************************************************************
 //* ************************ EXTERNAL REFERENCES ***************************

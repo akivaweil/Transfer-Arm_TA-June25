@@ -19,10 +19,10 @@ const unsigned long SERVO_ROTATION_DELAY = 500;        // Time to wait for servo
 const float X_OVERSHOOT_POSITION_INCHES = 22.55;       // X overshoot position for servo rotation (inches from home) - updated from original
 const float X_DROPOFF_POSITION_INCHES = 20.8;          // X position for dropoff (inches from home) - updated from original
 
-// Speed and acceleration settings for X-axis movements - updated from original
-// Using maximum speeds from config for optimal performance after homing
-const uint32_t X_TRAVEL_SPEED = (uint32_t)X_MAX_SPEED;        // X speed during travel movements (steps/sec) - using max speed
-const uint32_t X_TRAVEL_ACCELERATION = (uint32_t)X_ACCELERATION; // X acceleration during travel movements (steps/sec^2) - using max acceleration
+// Speed and acceleration settings for X-axis movements - 2X HOMING SPEEDS for maximum performance
+// Using 2x homing travel speeds for optimal pick cycle operation
+const uint32_t X_TRAVEL_SPEED = 50000;        // X speed during travel movements (steps/sec) - 2X X_TRAVEL_SPEED from homing
+const uint32_t X_TRAVEL_ACCELERATION = 30000; // X acceleration during travel movements (steps/sec^2) - 2X X_HOMING_SPEED
 
 //* ************************************************************************
 //* ************************ EXTERNAL REFERENCES ***************************

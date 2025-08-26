@@ -12,10 +12,10 @@ const int SERVO_HOME_ANGLE = 90;                        // Servo angle when retu
 const float RETURN_X_HOME_INCHES = 0.0;                  // X position to return to home first (inches)
 const float RETURN_X_PICKUP_INCHES = 1.0;                // X position to move to after home (inches) - updated from original
 
-// Speed and acceleration settings for X-axis return movements - updated from original
-// Using maximum speeds from config for optimal performance
-const uint32_t X_RETURN_SPEED = (uint32_t)X_MAX_SPEED;        // X speed during return movements (steps/sec) - using max speed
-const uint32_t X_RETURN_ACCELERATION = (uint32_t)X_ACCELERATION; // X acceleration during return movements (steps/sec^2) - using max acceleration
+// Speed and acceleration settings for X-axis return movements - 2X HOMING SPEEDS for maximum performance
+// Using 2x homing travel speeds for optimal pick cycle operation
+const uint32_t X_RETURN_SPEED = 50000;        // X speed during return movements (steps/sec) - 2X X_TRAVEL_SPEED from homing
+const uint32_t X_RETURN_ACCELERATION = 30000; // X acceleration during return movements (steps/sec^2) - 2X X_HOMING_SPEED
 
 //* ************************************************************************
 //* ************************ EXTERNAL REFERENCES ***************************
