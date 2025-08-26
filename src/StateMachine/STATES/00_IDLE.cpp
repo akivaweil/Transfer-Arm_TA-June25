@@ -4,7 +4,8 @@
 //* ************************************************************************
 //* ************************ IDLE STATE ************************************
 //* ************************************************************************
-// This state represents when the transfer arm is stationary at pickup position
+// This state represents when the transfer arm is stationary at startup position
+// (0.5 inches away from home on Z-axis, at pickup position on X-axis)
 // Waiting for trigger signals (start button or stage1 signal)
 // When triggered, transitions to pickup cycle
 

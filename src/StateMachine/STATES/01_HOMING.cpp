@@ -18,6 +18,7 @@ const uint32_t X_TRAVEL_SPEED = 25000;                    // X travel speed afte
 
 // Position settings (in inches from home) - updated from original
 const float Z_UP_POSITION_INCHES = 0.0;                   // Z position when fully up (inches from home) - updated from original
+const float Z_STARTUP_OFFSET_INCHES = 0.5;                // Z position 0.5 inches away from home for startup (inches from home)
 const float X_PICKUP_POSITION_INCHES = 1.0;               // X position for pickup (inches from home) - updated from original
 
 //* ************************************************************************
@@ -155,10 +156,24 @@ bool handleHoming() {
           zStepper->setAcceleration((uint32_t)Z_ACCELERATION);
           Serial.print("Z motor reset to max speed: "); Serial.print((uint32_t)Z_MAX_SPEED); Serial.println(" steps/sec");
         }
-        Serial.println("Homing complete. Motors reset to maximum speeds.");
+        Serial.println("Homing complete. Moving Z-axis to startup position...");
+        
+        // Move Z-axis 0.5 inches away from home for startup
+        if (zStepper) {
+          zStepper->setSpeedInHz(Z_TRAVEL_SPEED);
+          Serial.print("Z moving to startup position at speed: "); Serial.print(Z_TRAVEL_SPEED); Serial.println(" steps/sec");
+          zStepper->moveTo((int32_t)(Z_STARTUP_OFFSET_INCHES * STEPS_PER_INCH));  // Move to startup offset position
+        }
+        homingStep = 5;  // Move to waiting for Z startup movement
+      }
+      break;
+      
+    case 5:  // Wait for Z to reach startup position (0.5 inches away from home)
+      if (isMotorAtTarget(zStepper)) {
+        Serial.println("Z-axis startup movement complete. Ready for operation.");
         homingStep = 0;   // Reset for next homing
         zWasAlreadyAtHome = false;  // Reset flag
-        return true;      // Homing complete - now at pickup position
+        return true;      // Homing complete - now at startup position
       }
       break;
   }
