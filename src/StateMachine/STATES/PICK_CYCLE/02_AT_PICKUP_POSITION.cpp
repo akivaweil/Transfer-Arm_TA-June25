@@ -1,6 +1,6 @@
 #include <Arduino.h>
 #include <FastAccelStepper.h>
-#include "ESP32_Servo.h"
+#include "ServoControl.h"
 #include "globals.h"
 
 //* ************************************************************************
@@ -21,7 +21,7 @@ const float Z_UP_POSITION_INCHES = 5.0;                   // Z position when ful
 // External references to objects defined in main file
 extern FastAccelStepper *xStepper;
 extern FastAccelStepper *zStepper;
-extern Servo gripperServo;
+extern ServoControl gripperServo;
 extern unsigned long stateTimer;
 extern bool vacuumActive;
 

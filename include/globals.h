@@ -3,6 +3,7 @@
 
 #include <Bounce2.h>
 #include <FastAccelStepper.h>
+#include "ServoControl.h"
 #include "config/Config.h"
 #include "config/Pins_Definitions.h"
 

@@ -1,6 +1,6 @@
 #include <Arduino.h>
 #include <FastAccelStepper.h>
-#include "ESP32_Servo.h"
+#include "ServoControl.h"
 #include "globals.h"
 
 //* ************************************************************************

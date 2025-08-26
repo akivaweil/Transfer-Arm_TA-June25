@@ -1,6 +1,6 @@
 #include <Arduino.h>
 #include <FastAccelStepper.h>
-#include "ESP32_Servo.h"
+#include "ServoControl.h"
 #include <Bounce2.h>
 #include "globals.h"
 
@@ -27,7 +27,7 @@ void handleOTA();
 FastAccelStepperEngine engine = FastAccelStepperEngine();
 FastAccelStepper *xStepper = NULL;
 FastAccelStepper *zStepper = NULL;
-Servo gripperServo;
+ServoControl gripperServo;
 
 //* ************************************************************************
 //* ************************ BOUNCE2 OBJECTS *******************************
@@ -142,7 +142,7 @@ void setupServo() {
   // Local servo configuration
   const int GRIPPER_SERVO_HOME_ANGLE = 90;  // Neutral angle (higher value = more clockwise)
   
-  gripperServo.attach((int)SERVO_PIN);
+  gripperServo.init((int)SERVO_PIN, 0);  // Use channel 0 for gripper servo
   gripperServo.write(GRIPPER_SERVO_HOME_ANGLE);
   // Note: Removed blocking delay for smooth stepper operation
 }

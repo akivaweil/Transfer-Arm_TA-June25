@@ -1,6 +1,6 @@
 #include <Arduino.h>
 #include <FastAccelStepper.h>
-#include "ESP32_Servo.h"
+#include "ServoControl.h"
 #include "globals.h"
 
 //* ************************************************************************
@@ -17,7 +17,7 @@ const float RETURN_X_PICKUP_INCHES = 5.0;                 // X position to move 
 //* ************************************************************************
 // External references to objects defined in main file
 extern FastAccelStepper *xStepper;
-extern Servo gripperServo;
+extern ServoControl gripperServo;
 
 //* ************************************************************************
 //* ************************ MOVING TO PICKUP STATE ***********************

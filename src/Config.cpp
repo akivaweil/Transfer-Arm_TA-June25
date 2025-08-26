@@ -15,6 +15,11 @@ float STEPS_PER_MM = (STEPS_PER_REV / (PULLEY_TEETH * BELT_PITCH));
 float STEPS_PER_INCH = (STEPS_PER_MM * 25.4);
 
 //* ************************************************************************
+//* ************************ SERVO SETTINGS ********************************
+//* ************************************************************************
+unsigned long SERVO_MOVE_DELAY = 250;  // Delay for servo movement (milliseconds)
+
+//* ************************************************************************
 //* ************************ STEPPER MOTOR SETTINGS ***********************
 //* ************************************************************************
 // Global stepper motor settings used in main.cpp for motor initialization

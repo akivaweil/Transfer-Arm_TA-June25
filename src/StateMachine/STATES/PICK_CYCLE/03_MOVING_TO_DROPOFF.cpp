@@ -1,6 +1,6 @@
 #include <Arduino.h>
 #include <FastAccelStepper.h>
-#include "ESP32_Servo.h"
+#include "ServoControl.h"
 #include "globals.h"
 
 //* ************************************************************************
@@ -24,7 +24,7 @@ const float X_DROPOFF_POSITION_INCHES = 10.0;             // X position for drop
 //* ************************************************************************
 // External references to objects defined in main file
 extern FastAccelStepper *xStepper;
-extern Servo gripperServo;
+extern ServoControl gripperServo;
 extern unsigned long stateTimer;
 
 //* ************************************************************************
