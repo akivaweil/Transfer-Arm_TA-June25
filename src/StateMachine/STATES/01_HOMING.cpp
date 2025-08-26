@@ -38,19 +38,19 @@ extern Bounce xHomeSwitch;
 
 bool handleHoming() {
   static int homingStep = 0;
+  static bool zWasAlreadyAtHome = false;  // Track if Z was already at home
   
   switch(homingStep) {
     case 0:  // Check if Z-axis is already at home position
       Serial.println("Checking Z-axis position...");
       if (zHomeSwitch.read() == HIGH) {
         // Z-axis is already at home, skip homing movement
-        Serial.println("Z-axis already at home. Moving up...");
+        Serial.println("Z-axis already at home. Skipping Z homing...");
         if (zStepper) {
           zStepper->setCurrentPosition((int32_t)Z_HOME_POS);
-          zStepper->setSpeedInHz(Z_TRAVEL_SPEED);
-          zStepper->moveTo((int32_t)(Z_UP_POSITION_INCHES * STEPS_PER_INCH));  // Move up to specified position
         }
-        homingStep = 2;  // Skip to waiting for Z to reach up position
+        zWasAlreadyAtHome = true;  // Mark that Z was already at home
+        homingStep = 2;  // Skip to X-axis check
       } else {
         // Z-axis not at home, start homing movement
         Serial.println("Homing Z-axis...");
@@ -58,6 +58,7 @@ bool handleHoming() {
           zStepper->setSpeedInHz(Z_HOMING_SPEED);
           zStepper->move((int32_t)(Z_HOMING_DISTANCE_INCHES * STEPS_PER_INCH));  // Move negative direction
         }
+        zWasAlreadyAtHome = false;  // Mark that Z needed homing
         homingStep = 1;
       }
       break;
@@ -75,8 +76,9 @@ bool handleHoming() {
       }
       break;
       
-    case 2:  // Wait for Z to reach up position - moving up
-      if (isMotorAtTarget(zStepper)) {
+    case 2:  // Handle Z movement and check X-axis position
+      if (zWasAlreadyAtHome) {
+        // Z was already at home, no need to wait for movement
         // Check if X-axis is already at home position
         if (xHomeSwitch.read() == HIGH) {
           // X-axis is already at home, skip homing movement
@@ -95,6 +97,29 @@ bool handleHoming() {
             xStepper->move((int32_t)(X_HOMING_DISTANCE_INCHES * STEPS_PER_INCH));  // Move negative direction
           }
           homingStep = 3;
+        }
+      } else {
+        // Z needed homing, wait for it to reach up position
+        if (isMotorAtTarget(zStepper)) {
+          // Check if X-axis is already at home position
+          if (xHomeSwitch.read() == HIGH) {
+            // X-axis is already at home, skip homing movement
+            Serial.println("X-axis already at home. Moving to pickup position...");
+            if (xStepper) {
+              xStepper->setCurrentPosition((int32_t)X_HOME_POS);
+              xStepper->setSpeedInHz(X_TRAVEL_SPEED);
+              xStepper->moveTo((int32_t)(X_PICKUP_POSITION_INCHES * STEPS_PER_INCH));  // Move to pickup position
+            }
+            homingStep = 4;  // Skip to waiting for X to reach pickup position
+          } else {
+            // X-axis not at home, start homing movement
+            Serial.println("Homing X-axis...");
+            if (xStepper) {
+              xStepper->setSpeedInHz(X_HOMING_SPEED);
+              xStepper->move((int32_t)(X_HOMING_DISTANCE_INCHES * STEPS_PER_INCH));  // Move negative direction
+            }
+            homingStep = 3;
+          }
         }
       }
       break;
@@ -124,6 +149,7 @@ bool handleHoming() {
         }
         Serial.println("Homing complete. Motors reset to maximum speeds.");
         homingStep = 0;   // Reset for next homing
+        zWasAlreadyAtHome = false;  // Reset flag
         return true;      // Homing complete - now at pickup position
       }
       break;
