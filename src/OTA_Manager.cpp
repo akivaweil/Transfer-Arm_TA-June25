@@ -91,7 +91,14 @@ void initOTA() {
   });
   
   ArduinoOTA.onProgress([](unsigned int progress, unsigned int total) {
-    Serial.printf("Progress: %u%%\r", (progress / (total / 100)));
+    static int lastReportedProgress = -1;
+    int currentProgress = (progress / (total / 100));
+    
+    // Only report progress at 25% intervals
+    if (currentProgress >= lastReportedProgress + 25 || currentProgress == 100) {
+      Serial.printf("OTA Progress: %u%%\n", currentProgress);
+      lastReportedProgress = currentProgress;
+    }
   });
   
   ArduinoOTA.onError([](ota_error_t error) {

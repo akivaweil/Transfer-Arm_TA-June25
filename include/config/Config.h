@@ -28,4 +28,10 @@ extern float X_ACCELERATION; // Steps per second^2
 extern float Z_MAX_SPEED; // Steps per second
 extern float Z_ACCELERATION; // Steps per second^2
 
+//* ************************************************************************
+//* ************************ HOME POSITION SETTINGS ***********************
+//* ************************************************************************
+extern float Z_HOME_POS;  // Z-axis home position (typically 0)
+extern float X_HOME_POS;  // X-axis home position (typically 0)
+
 #endif 

@@ -26,4 +26,10 @@ unsigned long SERVO_MOVE_DELAY = 250;  // Delay for servo movement (milliseconds
 float X_MAX_SPEED = 7000.0;  // Steps per second
 float X_ACCELERATION = 10000.0; // Steps per second^2
 float Z_MAX_SPEED = 10000.0; // Steps per second
-float Z_ACCELERATION = 10000.0; // Steps per second^2 
+float Z_ACCELERATION = 10000.0; // Steps per second^2
+
+//* ************************************************************************
+//* ************************ HOME POSITION SETTINGS ***********************
+//* ************************************************************************
+float Z_HOME_POS = 0.0;  // Z-axis home position (typically 0)
+float X_HOME_POS = 0.0;  // X-axis home position (typically 0) 
