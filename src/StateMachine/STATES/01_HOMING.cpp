@@ -11,7 +11,7 @@ const float Z_HOMING_DISTANCE_INCHES = -7.0;              // Distance to move Z 
 const float X_HOMING_DISTANCE_INCHES = -30.0;              // Distance to move X when homing (inches, negative = left)
 
 // Speed settings for homing (in Hz) - updated from original
-const uint32_t Z_HOMING_SPEED = 1000;                     // Z homing speed (steps/sec)
+const uint32_t Z_HOMING_SPEED = 700;                     // Z homing speed (steps/sec)
 const uint32_t X_HOMING_SPEED = 1000;                     // X homing speed (steps/sec)
 const uint32_t Z_TRAVEL_SPEED = 20000;                    // Z travel speed after homing (steps/sec) - increased for faster operation
 const uint32_t X_TRAVEL_SPEED = 25000;                    // X travel speed after homing (steps/sec) - increased for faster operation
@@ -56,20 +56,20 @@ bool handleHoming() {
       } else {
         // Z-axis not at home, start homing sequence
         Serial.println("Starting Z-axis homing sequence...");
-        Serial.println("Step 1: Moving Z 0.5 inches away from home switch...");
+        Serial.println("Step 1: Moving Z 2 inches away from current position...");
         if (zStepper) {
           zStepper->setSpeedInHz(Z_TRAVEL_SPEED);
-          // Move 0.5 inches away from current position (positive = up)
-          zStepper->moveTo((int32_t)(0.5 * STEPS_PER_INCH));
+          // Move 2 inches away from current position (positive = up, relative movement)
+          zStepper->move((int32_t)(2.0 * STEPS_PER_INCH));
         }
         zWasAlreadyAtHome = false;  // Mark that Z needed homing
         homingStep = 1;
       }
       break;
       
-    case 1:  // Wait for Z to move 0.5" away, then start moving toward home switch
+    case 1:  // Wait for Z to move 2" away, then start moving toward home switch
       if (isMotorAtTarget(zStepper)) {
-        Serial.println("Z moved 0.5 inches away. Now moving toward home switch...");
+        Serial.println("Z moved 2 inches away. Now moving toward home switch...");
         if (zStepper) {
           zStepper->setSpeedInHz(Z_HOMING_SPEED);
           Serial.print("Z homing speed: "); Serial.print(Z_HOMING_SPEED); Serial.println(" steps/sec");
@@ -110,7 +110,7 @@ bool handleHoming() {
           zStepper->moveTo((int32_t)(Z_UP_POSITION_INCHES * STEPS_PER_INCH));  // Move up to specified position
         }
         Serial.println("Z-axis homing timeout - moving up...");
-        homingStep = 2;
+        homingStep = 7;
         homingStartTime = 0;  // Reset for next time
         return false;
       }
@@ -124,7 +124,7 @@ bool handleHoming() {
           zStepper->moveTo((int32_t)(Z_UP_POSITION_INCHES * STEPS_PER_INCH));  // Move up to specified position
         }
         Serial.println("Z-axis homed. Moving up...");
-        homingStep = 2;
+        homingStep = 7;
         homingStartTime = 0;  // Reset for next time
       }
       break;
