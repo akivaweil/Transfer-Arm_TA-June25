@@ -2,15 +2,7 @@
 #include <FastAccelStepper.h>
 #include "ServoControl.h"
 #include "globals.h"
-
-//* ************************************************************************
-//* ************************ MOVING TO PICKUP CONFIGURATION ****************
-//* ************************************************************************
-// Servo and movement settings for return sequence
-// Adjust these values directly in this file - no need to go to config file
-const int SERVO_HOME_ANGLE = 0;                        // Servo angle when returning home (degrees, higher value = more clockwise)
-const float RETURN_X_HOME_INCHES = 0.0;                   // X position to return to home first (inches)
-const float RETURN_X_PICKUP_INCHES = 5.0;                 // X position to move to after home (inches)
+#include "config/Config.h"
 
 //* ************************************************************************
 //* ************************ EXTERNAL REFERENCES ***************************
@@ -32,9 +24,9 @@ bool handleMovingToPickup() {
   switch(returnStep) {
     case 0:  // Signal Stage 2 and move X home - moving left
       digitalWrite((int)STAGE2_SIGNAL_PIN, LOW);  // Turn off Stage 2 signal
-      gripperServo.write(SERVO_HOME_ANGLE);    // Reset servo
+      gripperServo.write(SERVO_HOME_POS);    // Reset servo
       if (xStepper) {
-        xStepper->moveTo((int32_t)(RETURN_X_HOME_INCHES * STEPS_PER_INCH));           // Move X home
+        xStepper->moveTo((int32_t)(X_HOME_POS));           // Move X home
       }
       returnStep = 1;
       break;
@@ -42,7 +34,7 @@ bool handleMovingToPickup() {
     case 1:  // Wait for X to reach home position - moving left
       if (isMotorAtTarget(xStepper)) {
         if (xStepper) {
-          xStepper->moveTo((int32_t)(RETURN_X_PICKUP_INCHES * STEPS_PER_INCH));
+          xStepper->moveTo((int32_t)(X_PICKUP_INCHES * STEPS_PER_INCH));
         }
         returnStep = 2;
       }

@@ -2,18 +2,7 @@
 #include <FastAccelStepper.h>
 #include "ServoControl.h"
 #include "globals.h"
-
-//* ************************************************************************
-//* ************************ PICKUP POSITION CONFIGURATION ******************
-//* ************************************************************************
-// Vacuum activation and timing settings for pickup sequence
-// Adjust these values directly in this file - no need to go to config file
-const float VACUUM_ACTIVATION_INCHES = 2.5;               // Z position to start vacuum (inches from top)
-const unsigned long PICKUP_WAIT_TIME = 500;               // Time to wait after pickup (milliseconds)
-
-// Position settings (in inches from home)
-const float Z_PICKUP_POSITION_INCHES = 3.0;               // Z position for pickup (inches from home)
-const float Z_UP_POSITION_INCHES = 5.0;                   // Z position when fully up (inches from home)
+#include "config/Config.h"
 
 //* ************************************************************************
 //* ************************ EXTERNAL REFERENCES ***************************
@@ -38,9 +27,9 @@ bool handleAtPickupPosition() {
   switch(pickupStep) {
     case 0:  // Lower Z to pickup position - moving down
       if (zStepper) {
-        zStepper->moveTo((int32_t)(Z_PICKUP_POSITION_INCHES * STEPS_PER_INCH));
+        zStepper->moveTo((int32_t)(Z_PICKUP_LOWER_INCHES * STEPS_PER_INCH));
         // Activate vacuum when halfway down
-        if (zStepper->getCurrentPosition() <= (int32_t)(VACUUM_ACTIVATION_INCHES * STEPS_PER_INCH) && !vacuumActive) {
+        if (zStepper->getCurrentPosition() <= (int32_t)(Z_SUCTION_START_INCHES * STEPS_PER_INCH) && !vacuumActive) {
           activateVacuum();
         }
       }
@@ -50,7 +39,7 @@ bool handleAtPickupPosition() {
       break;
       
     case 1:  // Wait at pickup position - stationary
-      if (waitForTime(PICKUP_WAIT_TIME)) {
+      if (waitForTime(PICKUP_HOLD_TIME)) {
         if (zStepper) {
           zStepper->moveTo((int32_t)(Z_UP_POSITION_INCHES * STEPS_PER_INCH));
         }
