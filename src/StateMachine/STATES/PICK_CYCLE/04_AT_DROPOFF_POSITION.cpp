@@ -2,7 +2,19 @@
 #include <FastAccelStepper.h>
 #include "ServoControl.h"
 #include "globals.h"
-#include "config/Config.h"
+
+//* ************************************************************************
+//* ************************ DROPOFF POSITION CONFIGURATION ****************
+//* ************************************************************************
+// Speed and timing settings for dropoff sequence
+// Adjust these values directly in this file - no need to go to config file
+const uint32_t DROPOFF_Z_SPEED = 10000;                   // Z speed during dropoff (steps/sec) - updated from original
+const uint32_t DROPOFF_NORMAL_Z_SPEED = 10000;            // Z speed after dropoff (steps/sec) - updated from original
+const unsigned long DROPOFF_WAIT_TIME = 100;               // Time to wait after dropoff (milliseconds) - updated from original
+
+// Position settings (in inches from home) - updated from original
+const float Z_DROPOFF_POSITION_INCHES = 5.5;              // Z position for dropoff (inches from home) - updated from original
+const float Z_UP_POSITION_INCHES = 0.0;                   // Z position when fully up (inches from home) - updated from original
 
 //* ************************************************************************
 //* ************************ EXTERNAL REFERENCES ***************************
@@ -30,8 +42,8 @@ bool handleAtDropoffPosition() {
       }
       
       if (zStepper) {
-        zStepper->setSpeedInHz(Z_DROPOFF_SPEED);  // Slower for dropoff
-        zStepper->moveTo((int32_t)(Z_DROPOFF_LOWER_INCHES * STEPS_PER_INCH));
+        zStepper->setSpeedInHz(DROPOFF_Z_SPEED);  // Slower for dropoff
+        zStepper->moveTo((int32_t)(Z_DROPOFF_POSITION_INCHES * STEPS_PER_INCH));
       }
       if (isMotorAtTarget(zStepper)) {
         deactivateVacuum();
@@ -44,9 +56,9 @@ bool handleAtDropoffPosition() {
       break;
       
     case 2:  // Wait for dropoff hold time - stationary
-      if (waitForTime(DROPOFF_HOLD_TIME)) {
+      if (waitForTime(DROPOFF_WAIT_TIME)) {
         if (zStepper) {
-          zStepper->setSpeedInHz(Z_MAX_SPEED);  // Back to normal speed
+          zStepper->setSpeedInHz(DROPOFF_NORMAL_Z_SPEED);  // Back to normal speed
           zStepper->moveTo((int32_t)(Z_UP_POSITION_INCHES * STEPS_PER_INCH));
         }
         dropoffStep = 3;

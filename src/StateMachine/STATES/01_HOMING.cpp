@@ -1,7 +1,24 @@
 #include <Arduino.h>
 #include <FastAccelStepper.h>
 #include "globals.h"
-#include "config/Config.h"
+
+//* ************************************************************************
+//* ************************ HOMING CONFIGURATION **************************
+//* ************************************************************************
+// Movement distances and speeds for homing sequence
+// Adjust these values directly in this file - no need to go to config file
+const float Z_HOMING_DISTANCE_INCHES = -7.0;              // Distance to move Z when homing (inches, negative = down) - updated from original
+const float X_HOMING_DISTANCE_INCHES = -30.0;              // Distance to move X when homing (inches, negative = left)
+
+// Speed settings for homing (in Hz) - updated from original
+const uint32_t Z_HOMING_SPEED = 1000;                     // Z homing speed (steps/sec)
+const uint32_t X_HOMING_SPEED = 1000;                     // X homing speed (steps/sec)
+const uint32_t Z_TRAVEL_SPEED = 10000;                    // Z travel speed after homing (steps/sec) - updated from original
+const uint32_t X_TRAVEL_SPEED = 7000;                     // X travel speed after homing (steps/sec) - updated from original
+
+// Position settings (in inches from home) - updated from original
+const float Z_UP_POSITION_INCHES = 0.0;                   // Z position when fully up (inches from home) - updated from original
+const float X_PICKUP_POSITION_INCHES = 1.0;               // X position for pickup (inches from home) - updated from original
 
 //* ************************************************************************
 //* ************************ EXTERNAL REFERENCES ***************************
@@ -26,7 +43,7 @@ bool handleHoming() {
     case 0:  // Start Z homing - moving down to find home
       Serial.println("Homing Z-axis...");
       if (zStepper) {
-        zStepper->setSpeedInHz(Z_HOME_SPEED);
+        zStepper->setSpeedInHz(Z_HOMING_SPEED);
         zStepper->move((int32_t)(Z_HOMING_DISTANCE_INCHES * STEPS_PER_INCH));  // Move negative direction
       }
       homingStep = 1;
@@ -48,7 +65,7 @@ bool handleHoming() {
     case 2:  // Wait for Z to reach up position - moving up
       if (isMotorAtTarget(zStepper)) {
         if (xStepper) {
-          xStepper->setSpeedInHz(X_HOME_SPEED);
+          xStepper->setSpeedInHz(X_HOMING_SPEED);
           xStepper->move((int32_t)(X_HOMING_DISTANCE_INCHES * STEPS_PER_INCH));  // Move negative direction
         }
         homingStep = 3;
@@ -61,7 +78,7 @@ bool handleHoming() {
           xStepper->forceStop();
           xStepper->setCurrentPosition((int32_t)X_HOME_POS);
           xStepper->setSpeedInHz(X_TRAVEL_SPEED);
-          xStepper->moveTo((int32_t)(X_PICKUP_INCHES * STEPS_PER_INCH));  // Move to pickup position
+          xStepper->moveTo((int32_t)(X_PICKUP_POSITION_INCHES * STEPS_PER_INCH));  // Move to pickup position
         }
         homingStep = 4;
       }

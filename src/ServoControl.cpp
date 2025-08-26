@@ -1,5 +1,11 @@
 #include "ServoControl.h"
-#include "config/Config.h" // Include config for SERVO_MOVE_DELAY
+#include "config/Config.h" // Include config for other settings
+
+//* ************************************************************************
+//* ************************ SERVO CONTROL CONFIGURATION *******************
+//* ************************************************************************
+// Local servo configuration - no need to go to config file
+const unsigned long SERVO_MOVE_DELAY = 250;  // Delay for servo movement (milliseconds)
 
 ServoControl::ServoControl() {
     pin = -1;

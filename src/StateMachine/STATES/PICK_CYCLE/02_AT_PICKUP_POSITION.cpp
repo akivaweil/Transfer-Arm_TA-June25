@@ -2,7 +2,18 @@
 #include <FastAccelStepper.h>
 #include "ServoControl.h"
 #include "globals.h"
-#include "config/Config.h"
+
+//* ************************************************************************
+//* ************************ PICKUP POSITION CONFIGURATION ******************
+//* ************************************************************************
+// Vacuum activation and timing settings for pickup sequence
+// Adjust these values directly in this file - no need to go to config file
+const float VACUUM_ACTIVATION_INCHES = 4.0;               // Z position to start vacuum (inches from top) - updated from original
+const unsigned long PICKUP_WAIT_TIME = 300;               // Time to wait after pickup (milliseconds) - updated from original
+
+// Position settings (in inches from home) - updated from original
+const float Z_PICKUP_POSITION_INCHES = 7.0;               // Z position for pickup (inches from home) - updated from original
+const float Z_UP_POSITION_INCHES = 0.0;                   // Z position when fully up (inches from home) - updated from original
 
 //* ************************************************************************
 //* ************************ EXTERNAL REFERENCES ***************************
@@ -27,9 +38,9 @@ bool handleAtPickupPosition() {
   switch(pickupStep) {
     case 0:  // Lower Z to pickup position - moving down
       if (zStepper) {
-        zStepper->moveTo((int32_t)(Z_PICKUP_LOWER_INCHES * STEPS_PER_INCH));
+        zStepper->moveTo((int32_t)(Z_PICKUP_POSITION_INCHES * STEPS_PER_INCH));
         // Activate vacuum when halfway down
-        if (zStepper->getCurrentPosition() <= (int32_t)(Z_SUCTION_START_INCHES * STEPS_PER_INCH) && !vacuumActive) {
+        if (zStepper->getCurrentPosition() <= (int32_t)(VACUUM_ACTIVATION_INCHES * STEPS_PER_INCH) && !vacuumActive) {
           activateVacuum();
         }
       }
@@ -39,7 +50,7 @@ bool handleAtPickupPosition() {
       break;
       
     case 1:  // Wait at pickup position - stationary
-      if (waitForTime(PICKUP_HOLD_TIME)) {
+      if (waitForTime(PICKUP_WAIT_TIME)) {
         if (zStepper) {
           zStepper->moveTo((int32_t)(Z_UP_POSITION_INCHES * STEPS_PER_INCH));
         }
