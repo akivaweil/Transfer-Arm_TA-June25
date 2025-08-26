@@ -54,6 +54,7 @@ bool handleHoming() {
       } else {
         // Z-axis not at home, start homing movement
         Serial.println("Homing Z-axis...");
+        Serial.print("Z homing speed: "); Serial.print(Z_HOMING_SPEED); Serial.println(" steps/sec");
         if (zStepper) {
           zStepper->setSpeedInHz(Z_HOMING_SPEED);
           zStepper->move((int32_t)(Z_HOMING_DISTANCE_INCHES * STEPS_PER_INCH));  // Move negative direction
@@ -69,6 +70,7 @@ bool handleHoming() {
           zStepper->forceStop();
           zStepper->setCurrentPosition((int32_t)Z_HOME_POS);
           zStepper->setSpeedInHz(Z_TRAVEL_SPEED);
+          Serial.print("Z moving up at speed: "); Serial.print(Z_TRAVEL_SPEED); Serial.println(" steps/sec");
           zStepper->moveTo((int32_t)(Z_UP_POSITION_INCHES * STEPS_PER_INCH));  // Move up to specified position
         }
         Serial.println("Z-axis homed. Moving up...");
@@ -92,6 +94,7 @@ bool handleHoming() {
         } else {
           // X-axis not at home, start homing movement
           Serial.println("Homing X-axis...");
+          Serial.print("X homing speed: "); Serial.print(X_HOMING_SPEED); Serial.println(" steps/sec");
           if (xStepper) {
             xStepper->setSpeedInHz(X_HOMING_SPEED);
             xStepper->move((int32_t)(X_HOMING_DISTANCE_INCHES * STEPS_PER_INCH));  // Move negative direction
@@ -114,6 +117,7 @@ bool handleHoming() {
           } else {
             // X-axis not at home, start homing movement
             Serial.println("Homing X-axis...");
+            Serial.print("X homing speed: "); Serial.print(X_HOMING_SPEED); Serial.println(" steps/sec");
             if (xStepper) {
               xStepper->setSpeedInHz(X_HOMING_SPEED);
               xStepper->move((int32_t)(X_HOMING_DISTANCE_INCHES * STEPS_PER_INCH));  // Move negative direction
