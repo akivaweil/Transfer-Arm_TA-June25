@@ -47,10 +47,10 @@ extern float Z_SUCTION_START_POS; // Z position to start suction
 //* ************************ SERVO SETTINGS ********************************
 //* ************************************************************************
 // Servo settings (in degrees)
-extern float SERVO_HOME_POS;      // Neutral position
-extern float SERVO_PICKUP_POS;    // Pickup orientation
-extern float SERVO_TRAVEL_POS;     // Travel position
-extern float SERVO_DROPOFF_POS;   // Dropoff orientation
+extern float SERVO_HOME_ANGLE;      // Neutral angle
+extern float SERVO_PICKUP_ANGLE;    // Pickup orientation
+extern float SERVO_TRAVEL_ANGLE;     // Travel angle
+extern float SERVO_DROPOFF_ANGLE;   // Dropoff orientation
 
 //* ************************************************************************
 //* ************************ TIMING SETTINGS *******************************

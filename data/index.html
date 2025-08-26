@@ -457,7 +457,7 @@
             document.getElementById("zPosition").textContent =
                 (data.zPos || 0) + " steps";
             document.getElementById("servoPosition").textContent =
-                (data.servoPos || 0) + "°";
+                (data.servoAngle || 0) + "°";
             document.getElementById("vacuumStatus").textContent = data.vacuum ?
                 "ON" :
                 "OFF";
@@ -488,9 +488,9 @@
             document.getElementById("zMaxSpeed").value = config.zMaxSpeed;
             document.getElementById("zAcceleration").value = config.zAcceleration;
 
-            document.getElementById("servoPickup").value = config.servoPickupPos;
-            document.getElementById("servoTravel").value = config.servoTravelPos;
-            document.getElementById("servoDropoff").value = config.servoDropoffPos;
+            document.getElementById("servoPickup").value = config.servoPickupAngle;
+            document.getElementById("servoTravel").value = config.servoTravelAngle;
+            document.getElementById("servoDropoff").value = config.servoDropoffAngle;
 
             document.getElementById("pickupHoldTime").value = config.pickupHoldTime;
             document.getElementById("dropoffHoldTime").value =
@@ -617,13 +617,13 @@
 
         function saveServoSettings() {
             const config = {
-                servoPickupPos: parseInt(
+                servoPickupAngle: parseInt(
                     document.getElementById("servoPickup").value
                 ),
-                servoTravelPos: parseInt(
+                servoTravelAngle: parseInt(
                     document.getElementById("servoTravel").value
                 ),
-                servoDropoffPos: parseInt(
+                servoDropoffAngle: parseInt(
                     document.getElementById("servoDropoff").value
                 ),
             };

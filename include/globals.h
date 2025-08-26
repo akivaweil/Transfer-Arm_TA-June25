@@ -21,44 +21,23 @@ extern Bounce stopSignalStage2;
 //* ************************************************************************
 enum SystemState {
   STATE_IDLE,
-  STATE_PICKUP,
-  STATE_TRANSPORT, 
-  STATE_DROPOFF,
-  STATE_RETURN_HOME,
+  STATE_AT_PICKUP_POSITION,
+  STATE_MOVING_TO_DROPOFF,
+  STATE_AT_DROPOFF_POSITION,
+  STATE_MOVING_TO_PICKUP,
   STATE_HOMING
 };
 
-enum PickupState {
-  PICKUP_MOVE_X,
-  PICKUP_LOWER_Z,
-  PICKUP_WAIT,
-  PICKUP_RAISE_Z,
-  PICKUP_DONE
-};
-
-enum TransportState {
-  TRANSPORT_ROTATE_SERVO,
-  TRANSPORT_MOVE_TO_OVERSHOOT,
-  TRANSPORT_WAIT_SERVO,
-  TRANSPORT_MOVE_TO_DROPOFF,
-  TRANSPORT_DONE
-};
-
-enum DropoffState {
-  DROPOFF_LOWER_Z,
-  DROPOFF_RELEASE,
-  DROPOFF_WAIT,
-  DROPOFF_RAISE_Z,
-  DROPOFF_DONE
-};
+//* ************************************************************************
+//* ************************ PICK CYCLE STATES ****************************
+//* ************************************************************************
+// These states handle the complete pick cycle operations
+// Each state represents a specific position or movement of the transfer arm
 
 //* ************************************************************************
 //* ************************ STATE VARIABLES *******************************
 //* ************************************************************************
 extern SystemState systemState;
-extern PickupState pickupState;
-extern TransportState transportState;
-extern DropoffState dropoffState;
 
 //* ************************************************************************
 //* ************************ FUNCTION DECLARATIONS *************************
@@ -72,10 +51,10 @@ void setupDebouncers();
 // State handler functions
 bool handleHoming();
 bool handleIdle();
-bool handlePickup();
-bool handleTransport();
-bool handleDropoff();
-bool handleReturnHome();
+bool handleAtPickupPosition();
+bool handleMovingToDropoff();
+bool handleAtDropoffPosition();
+bool handleMovingToPickup();
 void handleSerial();
 
 // Utility functions

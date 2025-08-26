@@ -46,10 +46,10 @@ float Z_SUCTION_START_POS = (Z_SUCTION_START_INCHES * STEPS_PER_INCH); // Z posi
 //* ************************ SERVO SETTINGS ********************************
 //* ************************************************************************
 // Servo settings (in degrees)
-float SERVO_HOME_POS = 90.0;      // Neutral position
-float SERVO_PICKUP_POS = 10.0;    // Pickup orientation (updated from original)
-float SERVO_TRAVEL_POS = 0.0;     // Travel position (updated from original)
-float SERVO_DROPOFF_POS = 80.0;   // Dropoff orientation (updated from original)
+float SERVO_HOME_ANGLE = 90.0;      // Neutral angle
+float SERVO_PICKUP_ANGLE = 10.0;    // Pickup orientation (updated from original)
+float SERVO_TRAVEL_ANGLE = 0.0;     // Travel angle (updated from original)
+float SERVO_DROPOFF_ANGLE = 80.0;   // Dropoff orientation (updated from original)
 
 //* ************************************************************************
 //* ************************ TIMING SETTINGS *******************************

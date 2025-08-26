@@ -1,4 +1,3 @@
-#include "StateMachine/FUNCTIONS/Servo_Functions.h"
 #include "config/Config.h"
 #include "ESP32_Servo.h"
 #include <Arduino.h>
@@ -11,10 +10,10 @@ extern bool thetaServoIsActiveAndTiming;
 extern unsigned long thetaServoActiveStartTime;
 extern bool thetaServoSafetyDelayActive;
 
-// Activate the theta servo to its active position
+// Activate the theta servo to its active angle
 void activateThetaServo() {
     if (!thetaServoIsActiveAndTiming) {
-        thetaServo.write(THETA_SERVO_ACTIVE_POSITION);
+        thetaServo.write(SERVO_PICKUP_ANGLE);
         thetaServoActiveStartTime = millis();
         thetaServoIsActiveAndTiming = true;
         // Reset safety delay flag for new activation cycle
@@ -25,9 +24,9 @@ void activateThetaServo() {
     }
 }
 
-// Return the theta servo to its home position
+// Return the theta servo to its home angle
 void returnThetaServoToHome() {
-    thetaServo.write(THETA_SERVO_HOME_POSITION);
+    thetaServo.write(SERVO_HOME_ANGLE);
     thetaServoIsActiveAndTiming = false; // Clear the flag
     Serial.println("Theta servo returned to home.");
-} 
+}

@@ -11,10 +11,10 @@ void setupServo();
 void setupDebouncers();
 bool handleHoming();
 bool handleIdle();
-bool handlePickup();
-bool handleTransport();
-bool handleDropoff();
-bool handleReturnHome();
+bool handleAtPickupPosition();
+bool handleMovingToDropoff();
+bool handleAtDropoffPosition();
+bool handleMovingToPickup();
 void handleSerial();
 
 // OTA function declarations (implemented in OTA_Manager.cpp)
@@ -42,9 +42,6 @@ Bounce stopSignalStage2 = Bounce();
 //* ************************ STATE VARIABLES *******************************
 //* ************************************************************************
 SystemState systemState = STATE_HOMING;
-PickupState pickupState = PICKUP_MOVE_X;
-TransportState transportState = TRANSPORT_ROTATE_SERVO;
-DropoffState dropoffState = DROPOFF_LOWER_Z;
 
 // Timing variables
 unsigned long stateTimer = 0;
@@ -143,7 +140,7 @@ void setupSteppers() {
 
 void setupServo() {
   gripperServo.attach((int)SERVO_PIN);
-  gripperServo.write((int)SERVO_HOME_POS);
+  gripperServo.write((int)SERVO_HOME_ANGLE);
   // Note: Removed blocking delay for smooth stepper operation
 }
 
@@ -165,48 +162,45 @@ void loop() {
   
   // Main state machine
   switch(systemState) {
-    case STATE_HOMING:
-      if (handleHoming()) {
-        systemState = STATE_IDLE;
-        Serial.println("Homing complete. Ready for operation.");
-      }
-      break;
-      
     case STATE_IDLE:
       if (handleIdle()) {
-        systemState = STATE_PICKUP;
-        pickupState = PICKUP_MOVE_X;
+        systemState = STATE_AT_PICKUP_POSITION;
         Serial.println("Starting pickup sequence...");
       }
       break;
       
-    case STATE_PICKUP:
-      if (handlePickup()) {
-        systemState = STATE_TRANSPORT;
-        transportState = TRANSPORT_ROTATE_SERVO;
-        Serial.println("Pickup complete. Starting transport...");
+    case STATE_AT_PICKUP_POSITION:
+      if (handleAtPickupPosition()) {
+        systemState = STATE_MOVING_TO_DROPOFF;
+        Serial.println("Pickup complete. Moving to dropoff...");
       }
       break;
       
-    case STATE_TRANSPORT:
-      if (handleTransport()) {
-        systemState = STATE_DROPOFF;
-        dropoffState = DROPOFF_LOWER_Z;
-        Serial.println("Transport complete. Starting dropoff...");
+    case STATE_MOVING_TO_DROPOFF:
+      if (handleMovingToDropoff()) {
+        systemState = STATE_AT_DROPOFF_POSITION;
+        Serial.println("Transport complete. At dropoff position...");
       }
       break;
       
-    case STATE_DROPOFF:
-      if (handleDropoff()) {
-        systemState = STATE_RETURN_HOME;
-        Serial.println("Dropoff complete. Returning home...");
+    case STATE_AT_DROPOFF_POSITION:
+      if (handleAtDropoffPosition()) {
+        systemState = STATE_MOVING_TO_PICKUP;
+        Serial.println("Dropoff complete. Moving back to pickup...");
       }
       break;
       
-    case STATE_RETURN_HOME:
-      if (handleReturnHome()) {
-        systemState = STATE_IDLE;
-        Serial.println("Cycle complete. Ready for next operation.");
+    case STATE_MOVING_TO_PICKUP:
+      if (handleMovingToPickup()) {
+        systemState = STATE_HOMING;  // Go to homing instead of back to IDLE
+        Serial.println("Pick cycle complete. Starting automatic homing...");
+      }
+      break;
+      
+    case STATE_HOMING:
+      if (handleHoming()) {
+        systemState = STATE_IDLE;  // After homing, go to IDLE
+        Serial.println("Automatic homing complete. Ready for next operation.");
       }
       break;
   }
@@ -282,8 +276,7 @@ void handleSerial() {
       Serial.println(stage1Signal.read() ? "HIGH" : "LOW");
     }
     else if (command == "start" && systemState == STATE_IDLE) {
-      systemState = STATE_PICKUP;
-      pickupState = PICKUP_MOVE_X;
+      systemState = STATE_AT_PICKUP_POSITION;
       Serial.println("Manual start triggered");
     }
     else if (command == "stop") {
