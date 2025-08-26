@@ -66,14 +66,15 @@ bool handleHoming() {
       break;
       
     case 1:  // Wait for Z home switch - at home position
-      // Add debugging output
+      // Add debugging output (only when actively homing)
       static unsigned long lastDebugTime = 0;
       static unsigned long homingStartTime = 0;
       if (homingStartTime == 0) {
         homingStartTime = millis();
       }
       
-      if (millis() - lastDebugTime > 1000) {  // Debug every second
+      // Only show debug output every 5 seconds to reduce spam
+      if (millis() - lastDebugTime > 5000) {  // Debug every 5 seconds instead of 1
         Serial.print("Z homing - Current position: ");
         Serial.print(zStepper ? zStepper->getCurrentPosition() : 0);
         Serial.print(", Home switch (direct): ");

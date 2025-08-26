@@ -42,12 +42,14 @@ bool handleAtPickupPosition() {
   
   switch(pickupStep) {
     case 0:  // Lower Z to pickup position - moving down
-      if (zStepper) {
+      static bool zLoweringStarted = false;  // Track if we've started the movement
+      if (zStepper && !zLoweringStarted) {
         zStepper->forceStop();  // Stop any current movement
         zStepper->setAcceleration(Z_PICKUP_ACCELERATION);  // Set acceleration first
         zStepper->setSpeedInHz(Z_PICKUP_SPEED);           // Then set speed
         Serial.print("Z lowering to pickup at speed: "); Serial.print(Z_PICKUP_SPEED); Serial.println(" steps/sec");
         zStepper->moveTo((int32_t)(Z_PICKUP_POSITION_INCHES * STEPS_PER_INCH));
+        zLoweringStarted = true;  // Mark that we've started the movement
         // Activate vacuum when halfway down
         if (zStepper->getCurrentPosition() <= (int32_t)(VACUUM_ACTIVATION_INCHES * STEPS_PER_INCH) && !vacuumActive) {
           activateVacuum();
@@ -55,17 +57,20 @@ bool handleAtPickupPosition() {
       }
       if (isMotorAtTarget(zStepper)) {
         pickupStep = 1;
+        zLoweringStarted = false;  // Reset for next cycle
       }
       break;
       
     case 1:  // Wait at pickup position - stationary
+      static bool zRaisingStarted = false;  // Track if we've started the raising movement
       if (waitForTime(PICKUP_WAIT_TIME)) {
-        if (zStepper) {
+        if (zStepper && !zRaisingStarted) {
           zStepper->forceStop();  // Stop any current movement
           zStepper->setAcceleration(Z_PICKUP_ACCELERATION);  // Set acceleration first
           zStepper->setSpeedInHz(Z_PICKUP_SPEED);           // Then set speed
           Serial.print("Z raising to travel height at speed: "); Serial.print(Z_PICKUP_SPEED); Serial.println(" steps/sec");
           zStepper->moveTo((int32_t)(Z_UP_POSITION_INCHES * STEPS_PER_INCH));
+          zRaisingStarted = true;  // Mark that we've started the raising movement
         }
         pickupStep = 2;
       }
@@ -74,6 +79,7 @@ bool handleAtPickupPosition() {
     case 2:  // Raise Z to travel height - moving up
       if (isMotorAtTarget(zStepper)) {
         pickupStep = 0;   // Reset for next cycle
+        zRaisingStarted = false;  // Reset flag for next cycle
         return true;      // Pickup complete - ready to move to dropoff
       }
       break;
