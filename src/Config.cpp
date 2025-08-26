@@ -20,8 +20,8 @@ float STEPS_PER_INCH = (STEPS_PER_MM * 25.4);
 // Global stepper motor settings used in main.cpp for motor initialization
 float X_MAX_SPEED = 30000.0;  // Steps per second - increased for faster operation
 float X_ACCELERATION = 15000.0; // Steps per second^2 - increased for faster operation
-float Z_MAX_SPEED = 15000.0; // Steps per second - increased for faster operation
-float Z_ACCELERATION = 15000.0; // Steps per second^2 - increased for faster operation
+float Z_MAX_SPEED = 50000.0; // Steps per second - increased for faster operation (was 15000, too slow)
+float Z_ACCELERATION = 25000.0; // Steps per second^2 - increased for faster operation (was 15000, too slow)
 
 //* ************************************************************************
 //* ************************ HOME POSITION SETTINGS ***********************
