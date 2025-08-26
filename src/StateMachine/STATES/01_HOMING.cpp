@@ -13,8 +13,8 @@ const float X_HOMING_DISTANCE_INCHES = -30.0;              // Distance to move X
 // Speed settings for homing (in Hz) - updated from original
 const uint32_t Z_HOMING_SPEED = 1000;                     // Z homing speed (steps/sec)
 const uint32_t X_HOMING_SPEED = 1000;                     // X homing speed (steps/sec)
-const uint32_t Z_TRAVEL_SPEED = 10000;                    // Z travel speed after homing (steps/sec) - updated from original
-const uint32_t X_TRAVEL_SPEED = 7000;                     // X travel speed after homing (steps/sec) - updated from original
+const uint32_t Z_TRAVEL_SPEED = 20000;                    // Z travel speed after homing (steps/sec) - increased for faster operation
+const uint32_t X_TRAVEL_SPEED = 25000;                    // X travel speed after homing (steps/sec) - increased for faster operation
 
 // Position settings (in inches from home) - updated from original
 const float Z_UP_POSITION_INCHES = 0.0;                   // Z position when fully up (inches from home) - updated from original
