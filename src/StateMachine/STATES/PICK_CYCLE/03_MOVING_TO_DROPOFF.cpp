@@ -48,6 +48,7 @@ bool handleMovingToDropoff() {
       if (xStepper) {
         xStepper->setAcceleration(X_TRAVEL_ACCELERATION);  // Set acceleration first
         xStepper->setSpeedInHz(X_TRAVEL_SPEED);           // Then set speed
+        Serial.print("X moving to overshoot at speed: "); Serial.print(X_TRAVEL_SPEED); Serial.println(" steps/sec");
         xStepper->moveTo((int32_t)(X_OVERSHOOT_POSITION_INCHES * STEPS_PER_INCH));
       }
       transportStep = 1;
@@ -65,6 +66,7 @@ bool handleMovingToDropoff() {
         if (xStepper) {
           xStepper->setAcceleration(X_TRAVEL_ACCELERATION);  // Set acceleration first
           xStepper->setSpeedInHz(X_TRAVEL_SPEED);           // Then set speed
+          Serial.print("X moving to dropoff at speed: "); Serial.print(X_TRAVEL_SPEED); Serial.println(" steps/sec");
           xStepper->moveTo((int32_t)(X_DROPOFF_POSITION_INCHES * STEPS_PER_INCH));
         }
         transportStep = 3;

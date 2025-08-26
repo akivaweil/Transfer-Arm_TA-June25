@@ -46,6 +46,7 @@ bool handleAtPickupPosition() {
         zStepper->forceStop();  // Stop any current movement
         zStepper->setAcceleration(Z_PICKUP_ACCELERATION);  // Set acceleration first
         zStepper->setSpeedInHz(Z_PICKUP_SPEED);           // Then set speed
+        Serial.print("Z lowering to pickup at speed: "); Serial.print(Z_PICKUP_SPEED); Serial.println(" steps/sec");
         zStepper->moveTo((int32_t)(Z_PICKUP_POSITION_INCHES * STEPS_PER_INCH));
         // Activate vacuum when halfway down
         if (zStepper->getCurrentPosition() <= (int32_t)(VACUUM_ACTIVATION_INCHES * STEPS_PER_INCH) && !vacuumActive) {
@@ -63,6 +64,7 @@ bool handleAtPickupPosition() {
           zStepper->forceStop();  // Stop any current movement
           zStepper->setAcceleration(Z_PICKUP_ACCELERATION);  // Set acceleration first
           zStepper->setSpeedInHz(Z_PICKUP_SPEED);           // Then set speed
+          Serial.print("Z raising to travel height at speed: "); Serial.print(Z_PICKUP_SPEED); Serial.println(" steps/sec");
           zStepper->moveTo((int32_t)(Z_UP_POSITION_INCHES * STEPS_PER_INCH));
         }
         pickupStep = 2;

@@ -195,8 +195,8 @@ void loop() {
       
     case STATE_MOVING_TO_PICKUP:
       if (handleMovingToPickup()) {
-        systemState = STATE_AT_PICKUP_POSITION;  // Go directly to pickup position instead of homing
-        Serial.println("Pick cycle complete. Returning to pickup position...");
+        systemState = STATE_HOMING;  // Go to homing after pick cycle
+        Serial.println("Pick cycle complete. Starting automatic homing...");
       }
       break;
       
