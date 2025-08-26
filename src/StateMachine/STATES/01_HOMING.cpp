@@ -86,6 +86,16 @@ bool handleHoming() {
       
     case 4:  // Wait for X to reach pickup - moving right to pickup position
       if (isMotorAtTarget(xStepper)) {
+        // Reset motors to maximum speeds for normal operation
+        if (xStepper) {
+          xStepper->setSpeedInHz((uint32_t)X_MAX_SPEED);
+          xStepper->setAcceleration((uint32_t)X_ACCELERATION);
+        }
+        if (zStepper) {
+          zStepper->setSpeedInHz((uint32_t)Z_MAX_SPEED);
+          zStepper->setAcceleration((uint32_t)Z_ACCELERATION);
+        }
+        Serial.println("Homing complete. Motors reset to maximum speeds.");
         homingStep = 0;   // Reset for next homing
         return true;      // Homing complete - now at pickup position
       }

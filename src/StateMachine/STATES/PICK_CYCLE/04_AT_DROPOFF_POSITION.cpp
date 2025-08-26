@@ -8,13 +8,17 @@
 //* ************************************************************************
 // Speed and timing settings for dropoff sequence
 // Adjust these values directly in this file - no need to go to config file
-const uint32_t DROPOFF_Z_SPEED = 10000;                   // Z speed during dropoff (steps/sec) - updated from original
-const uint32_t DROPOFF_NORMAL_Z_SPEED = 10000;            // Z speed after dropoff (steps/sec) - updated from original
-const unsigned long DROPOFF_WAIT_TIME = 100;               // Time to wait after dropoff (milliseconds) - updated from original
+// Using maximum speeds from config for optimal performance after homing
+const uint32_t DROPOFF_Z_SPEED = (uint32_t)Z_MAX_SPEED;        // Z speed during dropoff (steps/sec) - using max speed
+const uint32_t DROPOFF_NORMAL_Z_SPEED = (uint32_t)Z_MAX_SPEED; // Z speed after dropoff (steps/sec) - using max speed
+const unsigned long DROPOFF_WAIT_TIME = 100;                     // Time to wait after dropoff (milliseconds) - updated from original
 
 // Position settings (in inches from home) - updated from original
 const float Z_DROPOFF_POSITION_INCHES = 5.5;              // Z position for dropoff (inches from home) - updated from original
 const float Z_UP_POSITION_INCHES = 0.0;                   // Z position when fully up (inches from home) - updated from original
+
+// Acceleration settings for Z-axis movements - updated from original
+const uint32_t DROPOFF_Z_ACCELERATION = (uint32_t)Z_ACCELERATION; // Z acceleration during dropoff movements (steps/sec^2) - using max acceleration
 
 //* ************************************************************************
 //* ************************ EXTERNAL REFERENCES ***************************
@@ -42,7 +46,8 @@ bool handleAtDropoffPosition() {
       }
       
       if (zStepper) {
-        zStepper->setSpeedInHz(DROPOFF_Z_SPEED);  // Set proper speed before movement
+        zStepper->setAcceleration(DROPOFF_Z_ACCELERATION);  // Set acceleration first
+        zStepper->setSpeedInHz(DROPOFF_Z_SPEED);           // Then set speed
         zStepper->moveTo((int32_t)(Z_DROPOFF_POSITION_INCHES * STEPS_PER_INCH));
       }
       if (isMotorAtTarget(zStepper)) {
@@ -58,7 +63,8 @@ bool handleAtDropoffPosition() {
     case 2:  // Wait for dropoff hold time - stationary
       if (waitForTime(DROPOFF_WAIT_TIME)) {
         if (zStepper) {
-          zStepper->setSpeedInHz(DROPOFF_NORMAL_Z_SPEED);  // Set proper speed before movement
+          zStepper->setAcceleration(DROPOFF_Z_ACCELERATION);  // Set acceleration first
+          zStepper->setSpeedInHz(DROPOFF_NORMAL_Z_SPEED);    // Then set speed
           zStepper->moveTo((int32_t)(Z_UP_POSITION_INCHES * STEPS_PER_INCH));
         }
         dropoffStep = 3;
