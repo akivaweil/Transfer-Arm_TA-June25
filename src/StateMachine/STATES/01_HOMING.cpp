@@ -88,6 +88,7 @@ bool handleHoming() {
           if (xStepper) {
             xStepper->setCurrentPosition((int32_t)X_HOME_POS);
             xStepper->setSpeedInHz(X_TRAVEL_SPEED);
+            Serial.print("X moving to pickup at speed: "); Serial.print(X_TRAVEL_SPEED); Serial.println(" steps/sec");
             xStepper->moveTo((int32_t)(X_PICKUP_POSITION_INCHES * STEPS_PER_INCH));  // Move to pickup position
           }
           homingStep = 4;  // Skip to waiting for X to reach pickup position
@@ -134,6 +135,7 @@ bool handleHoming() {
           xStepper->forceStop();
           xStepper->setCurrentPosition((int32_t)X_HOME_POS);
           xStepper->setSpeedInHz(X_TRAVEL_SPEED);
+          Serial.print("X moving to pickup at speed: "); Serial.print(X_TRAVEL_SPEED); Serial.println(" steps/sec");
           xStepper->moveTo((int32_t)(X_PICKUP_POSITION_INCHES * STEPS_PER_INCH));  // Move to pickup position
         }
         homingStep = 4;
@@ -146,10 +148,12 @@ bool handleHoming() {
         if (xStepper) {
           xStepper->setSpeedInHz((uint32_t)X_MAX_SPEED);
           xStepper->setAcceleration((uint32_t)X_ACCELERATION);
+          Serial.print("X motor reset to max speed: "); Serial.print((uint32_t)X_MAX_SPEED); Serial.println(" steps/sec");
         }
         if (zStepper) {
           zStepper->setSpeedInHz((uint32_t)Z_MAX_SPEED);
           zStepper->setAcceleration((uint32_t)Z_ACCELERATION);
+          Serial.print("Z motor reset to max speed: "); Serial.print((uint32_t)Z_MAX_SPEED); Serial.println(" steps/sec");
         }
         Serial.println("Homing complete. Motors reset to maximum speeds.");
         homingStep = 0;   // Reset for next homing
