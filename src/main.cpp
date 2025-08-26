@@ -1,6 +1,6 @@
 #include <Arduino.h>
 #include <FastAccelStepper.h>
-#include <ESP32Servo.h>
+#include "ESP32_Servo.h"
 #include <Bounce2.h>
 #include "globals.h"
 
@@ -139,8 +139,11 @@ void setupSteppers() {
 }
 
 void setupServo() {
+  // Local servo configuration
+  const int GRIPPER_SERVO_HOME_ANGLE = 90;  // Neutral angle (higher value = more clockwise)
+  
   gripperServo.attach((int)SERVO_PIN);
-  gripperServo.write((int)SERVO_HOME_ANGLE);
+  gripperServo.write(GRIPPER_SERVO_HOME_ANGLE);
   // Note: Removed blocking delay for smooth stepper operation
 }
 

@@ -1,6 +1,6 @@
 #include <Arduino.h>
 #include <FastAccelStepper.h>
-#include <ESP32Servo.h>
+#include "ESP32_Servo.h"
 #include "globals.h"
 
 //* ************************************************************************
@@ -8,7 +8,7 @@
 //* ************************************************************************
 // Servo and movement settings for return sequence
 // Adjust these values directly in this file - no need to go to config file
-const int SERVO_HOME_ANGLE = 0;                        // Servo angle when returning home (degrees)
+const int SERVO_HOME_ANGLE = 0;                        // Servo angle when returning home (degrees, higher value = more clockwise)
 const float RETURN_X_HOME_INCHES = 0.0;                   // X position to return to home first (inches)
 const float RETURN_X_PICKUP_INCHES = 5.0;                 // X position to move to after home (inches)
 

@@ -1,6 +1,6 @@
 #include <Arduino.h>
 #include <FastAccelStepper.h>
-#include <ESP32Servo.h>
+#include "ESP32_Servo.h"
 #include "globals.h"
 
 //* ************************************************************************
@@ -11,8 +11,8 @@
 //! STEP 1: SET SERVO TO TRAVEL ANGLE AND MOVE TO DROPOFF POSITION
 //! ************************************************************************
 
-const int SERVO_TRAVEL_ANGLE = 90;                    // Servo angle during travel (degrees)
-const int SERVO_DROPOFF_ANGLE = 180;                  // Servo angle for dropoff (degrees)
+const int SERVO_TRAVEL_ANGLE = 90;                    // Servo angle during travel (degrees, higher value = more clockwise)
+const int SERVO_DROPOFF_ANGLE = 180;                  // Servo angle for dropoff (degrees, higher value = more clockwise)
 const unsigned long SERVO_ROTATION_DELAY = 250;           // Time to wait for servo rotation (milliseconds)
 
 // Position settings (in inches from home)

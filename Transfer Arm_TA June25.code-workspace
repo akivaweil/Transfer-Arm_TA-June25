@@ -1,0 +1,82 @@
+{
+    "folders": [
+        {
+            "name": "Transfer Arm TA June25",
+            "path": "."
+        }
+    ],
+    "settings": {
+        "foldercolors.enable": true,
+        "foldercolors.showInExplorer": true,
+        "foldercolors.showInSideBar": true,
+        "foldercolors.folders": [
+            {
+                "folderPath": "src/",
+                "color": "foldercolors.color_0066cc",
+                "badge": "🏠"
+            },
+            {
+                "folderPath": "include/",
+                "color": "foldercolors.color_0066cc",
+                "badge": "🏠"
+            },
+            {
+                "folderPath": "src/Config.cpp",
+                "color": "foldercolors.color_00cc00",
+                "badge": "⚙️"
+            },
+            {
+                "folderPath": "src/Pins_Definitions.cpp",
+                "color": "foldercolors.color_00cc00",
+                "badge": "⚙️"
+            },
+            {
+                "folderPath": "include/config/",
+                "color": "foldercolors.color_00cc00",
+                "badge": "⚙️"
+            },
+            {
+                "folderPath": "src/StateMachine/",
+                "color": "foldercolors.color_9933cc",
+                "badge": "🔄"
+            },
+            {
+                "folderPath": "src/StateMachine/STATES/",
+                "color": "foldercolors.color_ffcc00",
+                "badge": "🔄"
+            },
+            {
+                "folderPath": "src/StateMachine/FUNCTIONS/",
+                "color": "foldercolors.color_9933cc",
+                "badge": "🔄"
+            },
+            {
+                "folderPath": "src/StateMachine/STATES/PICK_CYCLE/",
+                "color": "foldercolors.color_00cccc",
+                "badge": "🎨"
+            },
+            {
+                "folderPath": "lib/",
+                "color": "foldercolors.color_ff6600",
+                "badge": "🔌"
+            },
+            {
+                "folderPath": "data/",
+                "color": "foldercolors.color_9933cc",
+                "badge": "💾"
+            },
+            {
+                "folderPath": "test/",
+                "color": "foldercolors.color_cc66cc",
+                "badge": "🧪"
+            }
+        ]
+    },
+    "extensions": {
+        "recommendations": [
+            "platformio.platformio-ide",
+            "naumovs.color-highlight",
+            "alefragnani.folder-colorizer"
+        ]
+    }
+}
