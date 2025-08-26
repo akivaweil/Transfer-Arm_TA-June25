@@ -81,7 +81,7 @@ void setupPins() {
   pinMode((int)START_BUTTON_PIN, INPUT_PULLDOWN);
   pinMode((int)STAGE1_SIGNAL_PIN, INPUT_PULLDOWN);
   pinMode((int)X_HOME_SWITCH_PIN, INPUT_PULLDOWN);
-  pinMode((int)Z_HOME_SWITCH_PIN, INPUT_PULLDOWN);
+  pinMode((int)Z_HOME_SWITCH_PIN, INPUT);  // No internal pull-down resistor
   pinMode((int)STOP_SIGNAL_STAGE_2, INPUT_PULLDOWN);
   
   // Output pins

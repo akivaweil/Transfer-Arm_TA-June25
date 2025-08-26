@@ -44,7 +44,7 @@ bool handleHoming() {
   switch(homingStep) {
     case 0:  // Check if Z-axis is already at home position
       Serial.println("Checking Z-axis position...");
-      if (zHomeSwitch.read() == HIGH) {
+      if (digitalRead((int)Z_HOME_SWITCH_PIN) == HIGH) {
         // Z-axis is already at home, skip homing movement
         Serial.println("Z-axis already at home. Skipping Z homing...");
         if (zStepper) {
@@ -66,7 +66,40 @@ bool handleHoming() {
       break;
       
     case 1:  // Wait for Z home switch - at home position
-      if (zHomeSwitch.read() == HIGH) {
+      // Add debugging output
+      static unsigned long lastDebugTime = 0;
+      static unsigned long homingStartTime = 0;
+      if (homingStartTime == 0) {
+        homingStartTime = millis();
+      }
+      
+      if (millis() - lastDebugTime > 1000) {  // Debug every second
+        Serial.print("Z homing - Current position: ");
+        Serial.print(zStepper ? zStepper->getCurrentPosition() : 0);
+        Serial.print(", Home switch (direct): ");
+        Serial.print(digitalRead((int)Z_HOME_SWITCH_PIN) ? "HIGH" : "LOW");
+        Serial.print(", Target: ");
+        Serial.println((int32_t)(Z_HOMING_DISTANCE_INCHES * STEPS_PER_INCH));
+        lastDebugTime = millis();
+      }
+      
+      // Add timeout after 30 seconds
+      if (millis() - homingStartTime > 30000) {
+        Serial.println("Z homing timeout - forcing completion");
+        if (zStepper) {
+          zStepper->forceStop();
+          zStepper->setCurrentPosition((int32_t)Z_HOME_POS);
+          zStepper->setSpeedInHz(Z_TRAVEL_SPEED);
+          Serial.print("Z moving up at speed: "); Serial.print(Z_TRAVEL_SPEED); Serial.println(" steps/sec");
+          zStepper->moveTo((int32_t)(Z_UP_POSITION_INCHES * STEPS_PER_INCH));  // Move up to specified position
+        }
+        Serial.println("Z-axis homing timeout - moving up...");
+        homingStep = 2;
+        homingStartTime = 0;  // Reset for next time
+        return false;
+      }
+      
+      if (digitalRead((int)Z_HOME_SWITCH_PIN) == HIGH) {
         if (zStepper) {
           zStepper->forceStop();
           zStepper->setCurrentPosition((int32_t)Z_HOME_POS);
@@ -76,6 +109,7 @@ bool handleHoming() {
         }
         Serial.println("Z-axis homed. Moving up...");
         homingStep = 2;
+        homingStartTime = 0;  // Reset for next time
       }
       break;
       
